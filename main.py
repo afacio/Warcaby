@@ -1,4 +1,4 @@
-#import os
+
 dozwolone = [0,1,2,3,4,5,6,7]
 class Pozycja():
     def __init__(self):
@@ -88,7 +88,7 @@ class Pionek(Pozycja):
                     #os.system('cls')
                     repr_graf()
                     print("\nWybrales zle pole")
-                    p.wybor_ruchu(p) #ponowne wywołanie funcji
+                    p.wybor_ruchu(p,0) #ponowne wywołanie funcji
             if self._gracz_ID == 3: #ruch do przodu czarny
                 if (((r.y - p.y == 1)and(r.x-p.x == 1))or((r.y-p.y == 1)and(r.x -p.x == -1))): #sprawdzam czy ruch jest zgodny z zasadami (o jedno pole w przod)
                     plansza[r.y][r.x] = plansza[p.y][p.x]
@@ -97,7 +97,7 @@ class Pionek(Pozycja):
                     #os.system('cls')
                     repr_graf()
                     print("\nWybrales zle pole")
-                    p.wybor_ruchu(p) #ponowne wywołanie funcji
+                    p.wybor_ruchu(p,0) #ponowne wywołanie funcji
         # bicie bialych
         elif plansza[r.y][r.x] == 2 and self._gracz_ID == 3:
             if (((r.y - p.y == -1) and (r.x - p.x == -1)) or ((r.y - p.y == -1) and (r.x - p.x == 1)) or ((r.y - p.y == 1)and(r.x-p.x == 1))or((r.y-p.y == 1)and(r.x -p.x == -1))):
@@ -124,7 +124,7 @@ class Pionek(Pozycja):
 
                         else:
                             print("\nniedozwolony ruch")
-                            p.wybor_ruchu(p)
+                            p.wybor_ruchu(p,0)
 
                     else:  # bicie w prawo
                         if r.x == 7 and plansza[r.y - 1][r.x - 1] == 1:  # rikoszet os x sciana prawo gora
@@ -147,7 +147,7 @@ class Pionek(Pozycja):
 
                         else:
                             print("\nniedozwolony ruch")
-                            p.wybor_ruchu(p)
+                            p.wybor_ruchu(p,0)
 
                 else:  # bicie w dol
                     if r.x + 1 - p.x == 0:  # bicie w lewo
@@ -171,7 +171,7 @@ class Pionek(Pozycja):
 
                         else:
                             print("\nniedozwolony ruch")
-                            p.wybor_ruchu(p)
+                            p.wybor_ruchu(p,0)
 
                     else:  # bicie w prawo
                         if r.x == 7 and plansza[r.y + 1][r.x - 1] == 1:  # rikoszet os x sciana prawo dol
@@ -194,11 +194,11 @@ class Pionek(Pozycja):
 
                         else:
                             print("\nniedozwolony ruch")
-                            p.wybor_ruchu(p)
+                            p.wybor_ruchu(p,0)
             else:
                 repr_graf()
                 print("\nWybrales zle pole")
-                p.wybor_ruchu(p)
+                p.wybor_ruchu(p,0)
         # bicie czarnych
         elif plansza[r.y][r.x] == 3 and self._gracz_ID == 2:
             if (((r.y - p.y == -1) and (r.x - p.x == -1)) or ((r.y - p.y == -1) and (r.x - p.x == 1)) or (
@@ -226,7 +226,7 @@ class Pionek(Pozycja):
 
                         else:
                             print("\nniedozwolony ruch")
-                            p.wybor_ruchu(p)
+                            p.wybor_ruchu(p,0)
 
                     else:  # bicie w prawo
                         if r.x == 7 and plansza[r.y - 1][r.x - 1] == 1:  # rikoszet os x sciana prawo gora
@@ -249,7 +249,7 @@ class Pionek(Pozycja):
 
                         else:
                             print("\nniedozwolony ruch")
-                            p.wybor_ruchu(p)
+                            p.wybor_ruchu(p,0)
 
                 else:  # bicie w dol
                     if r.x + 1 - p.x == 0:  # bicie w lewo
@@ -273,7 +273,7 @@ class Pionek(Pozycja):
 
                         else:
                             print("\nniedozwolony ruch")
-                            p.wybor_ruchu(p)
+                            p.wybor_ruchu(p,0)
 
                     else:  # bicie w prawo
                         if r.x == 7 and plansza[r.y + 1][r.x - 1] == 1:  # rikoszet os x sciana prawo dol
@@ -296,16 +296,16 @@ class Pionek(Pozycja):
 
                         else:
                             print("\nniedozwolony ruch")
-                            p.wybor_ruchu(p)
+                            p.wybor_ruchu(p,0)
             else:
                 repr_graf()
                 print("\nWybrales zle pole")
-                p.wybor_ruchu(p)
+                p.wybor_ruchu(p,0)
         else:
             #os.system('cls')
             repr_graf()
             print("\nWybrales zle pole")
-            p.wybor_ruchu(p)
+            p.wybor_ruchu(p,0)
 
 def czy_istnieje_bicie(y,x,ID):
         p = Pionek('kopia',ID)
@@ -498,6 +498,10 @@ def main():
         if dlugosc_gry == 30 and bialy.ilosc_pionkow == 12 and czarny.ilosc_pionkow ==12:
             print("Remis!")
             break
+        if bialy.ilosc_pionkow == 0:
+            print("Wygrał gracz czarny")
+        elif czarny.ilosc_pionkow == 0:
+            print("Wygrał gracz bialy")
         dlugosc_gry += 1
 
 main()
