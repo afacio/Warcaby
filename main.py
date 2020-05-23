@@ -1,5 +1,15 @@
 
 dozwolone = [0,1,2,3,4,5,6,7]
+
+"""
+	0 - pole białe
+	1 - pole czarne
+	2 - pionek biały
+	3 - pionek czarny
+	4 - biala damka
+	5 - czarna damka
+"""
+
 class Pozycja():
     def __init__(self):
         self.x = 0
@@ -50,6 +60,40 @@ def repr_graf():
     for iter.x in range(0, 8):
         print("", iter.x,"", end='')
 
+import pygame
+from pygame.locals import *
+size = 100
+white_color = [200, 200, 200]
+black_color = [100, 100, 100]
+w_pawn = pygame.transform.scale(pygame.image.load("pawn_white.png"),(80,80))
+b_pawn = pygame.transform.scale(pygame.image.load("pawn_black.png"),(80,80))
+w_queen = pygame.transform.scale(pygame.image.load("queen_white.png"),(80,80))
+b_queen = pygame.transform.scale(pygame.image.load("queen_black.png"),(80,80))
+pygame.font.init()
+
+
+def rysuj_plansze(self):
+    Game_window = pygame.display.set_mode((800, 900), 0, 32)
+    pygame.display.set_caption('Chess Endgame')
+    for x in range(1, 9):
+        for y in range(1, 9):
+            if x % 2 != 0:
+                if y % 2 != 0:
+                    pygame.draw.rect(Game_window, white_color, [size * (x - 1), size * (y - 1), size, size])
+                else:
+                    pygame.draw.rect(Game_window, black_color, [size * (x - 1), size * (y - 1), size, size])
+            else:
+                if y % 2 != 0:
+                    pygame.draw.rect(Game_window, black_color, [size * (x - 1), size * (y - 1), size, size])
+                else:
+                    pygame.draw.rect(Game_window, white_color, [size * (x - 1), size * (y - 1), size, size])
+    Game_window.blit(w_king_img, (self.x_WK * 80, self.y_WK * 80))
+    pygame.display.flip()
+    Game_window.blit(b_king_img, (self.x_BK * 80, self.y_BK * 80))
+    pygame.display.flip()
+    Game_window.blit(w_rook_img, (self.x_WR * 80, self.y_WR * 80))
+    pygame.display.flip()
+
 class Pionek(Pozycja):
     def __init__(self,nazwa,ID):
         self._nazwa_gracza = nazwa
@@ -60,7 +104,7 @@ class Pionek(Pozycja):
             print("Wybierz pionek ktorym chcesz wykonac ruch")
             p.x = int(input("Wybierz pozycje x pionka:"))
             p.y = int(input("Wybierz pozycje y pionka:"))
-            if p.x in dozwolone and p.y in dozwolone and plansza[p.y][p.x] == self._gracz_ID :
+            if (p.x in dozwolone and p.y in dozwolone) and (plansza[p.y][p.x] == self._gracz_ID or plansza[p.y][p.x] == self._gracz_ID + 2):
                 break
             else:
                 print("Blad przy wyborze")
@@ -124,7 +168,7 @@ class Pionek(Pozycja):
 
                         else:
                             print("\nniedozwolony ruch")
-                            p.wybor_ruchu(p,0)
+                            p.wybor_ruchu(p,1)
 
                     else:  # bicie w prawo
                         if r.x == 7 and plansza[r.y - 1][r.x - 1] == 1:  # rikoszet os x sciana prawo gora
@@ -147,7 +191,7 @@ class Pionek(Pozycja):
 
                         else:
                             print("\nniedozwolony ruch")
-                            p.wybor_ruchu(p,0)
+                            p.wybor_ruchu(p,1)
 
                 else:  # bicie w dol
                     if r.x + 1 - p.x == 0:  # bicie w lewo
@@ -171,7 +215,7 @@ class Pionek(Pozycja):
 
                         else:
                             print("\nniedozwolony ruch")
-                            p.wybor_ruchu(p,0)
+                            p.wybor_ruchu(p,1)
 
                     else:  # bicie w prawo
                         if r.x == 7 and plansza[r.y + 1][r.x - 1] == 1:  # rikoszet os x sciana prawo dol
@@ -194,11 +238,11 @@ class Pionek(Pozycja):
 
                         else:
                             print("\nniedozwolony ruch")
-                            p.wybor_ruchu(p,0)
+                            p.wybor_ruchu(p,1)
             else:
                 repr_graf()
                 print("\nWybrales zle pole")
-                p.wybor_ruchu(p,0)
+                p.wybor_ruchu(p,1)
         # bicie czarnych
         elif plansza[r.y][r.x] == 3 and self._gracz_ID == 2:
             if (((r.y - p.y == -1) and (r.x - p.x == -1)) or ((r.y - p.y == -1) and (r.x - p.x == 1)) or (
@@ -226,7 +270,7 @@ class Pionek(Pozycja):
 
                         else:
                             print("\nniedozwolony ruch")
-                            p.wybor_ruchu(p,0)
+                            p.wybor_ruchu(p,1)
 
                     else:  # bicie w prawo
                         if r.x == 7 and plansza[r.y - 1][r.x - 1] == 1:  # rikoszet os x sciana prawo gora
@@ -249,7 +293,7 @@ class Pionek(Pozycja):
 
                         else:
                             print("\nniedozwolony ruch")
-                            p.wybor_ruchu(p,0)
+                            p.wybor_ruchu(p,1)
 
                 else:  # bicie w dol
                     if r.x + 1 - p.x == 0:  # bicie w lewo
@@ -273,7 +317,7 @@ class Pionek(Pozycja):
 
                         else:
                             print("\nniedozwolony ruch")
-                            p.wybor_ruchu(p,0)
+                            p.wybor_ruchu(p,1)
 
                     else:  # bicie w prawo
                         if r.x == 7 and plansza[r.y + 1][r.x - 1] == 1:  # rikoszet os x sciana prawo dol
@@ -296,11 +340,11 @@ class Pionek(Pozycja):
 
                         else:
                             print("\nniedozwolony ruch")
-                            p.wybor_ruchu(p,0)
+                            p.wybor_ruchu(p,1)
             else:
                 repr_graf()
                 print("\nWybrales zle pole")
-                p.wybor_ruchu(p,0)
+                p.wybor_ruchu(p,1)
         else:
             #os.system('cls')
             repr_graf()
@@ -418,12 +462,13 @@ bialy = Pionek('Bialy', 2)
 czarny = Pionek('Czarny', 3)
 
 def uzup_plan_pocz():
-
     """
-	0 - pole białe
-	1 - pole czarne
-	2 - pionek biały
-	3 - pionek czarny
+    0 - pole białe
+    1 - pole czarne
+    2 - pionek biały
+    3 - pionek czarny
+    4 - biala damka
+    5 - czarna damka
     """
 
     #pionki czarne
