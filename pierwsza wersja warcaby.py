@@ -60,40 +60,6 @@ def repr_graf():
     for iter.x in range(0, 8):
         print("", iter.x,"", end='')
 
-import pygame
-from pygame.locals import *
-size = 100
-white_color = [200, 200, 200]
-black_color = [100, 100, 100]
-w_pawn = pygame.transform.scale(pygame.image.load("pawn_white.png"),(80,80))
-b_pawn = pygame.transform.scale(pygame.image.load("pawn_black.png"),(80,80))
-w_queen = pygame.transform.scale(pygame.image.load("queen_white.png"),(80,80))
-b_queen = pygame.transform.scale(pygame.image.load("queen_black.png"),(80,80))
-pygame.font.init()
-
-
-def rysuj_plansze(self):
-    Game_window = pygame.display.set_mode((800, 900), 0, 32)
-    pygame.display.set_caption('Chess Endgame')
-    for x in range(1, 9):
-        for y in range(1, 9):
-            if x % 2 != 0:
-                if y % 2 != 0:
-                    pygame.draw.rect(Game_window, white_color, [size * (x - 1), size * (y - 1), size, size])
-                else:
-                    pygame.draw.rect(Game_window, black_color, [size * (x - 1), size * (y - 1), size, size])
-            else:
-                if y % 2 != 0:
-                    pygame.draw.rect(Game_window, black_color, [size * (x - 1), size * (y - 1), size, size])
-                else:
-                    pygame.draw.rect(Game_window, white_color, [size * (x - 1), size * (y - 1), size, size])
-    Game_window.blit(w_king_img, (self.x_WK * 80, self.y_WK * 80))
-    pygame.display.flip()
-    Game_window.blit(b_king_img, (self.x_BK * 80, self.y_BK * 80))
-    pygame.display.flip()
-    Game_window.blit(w_rook_img, (self.x_WR * 80, self.y_WR * 80))
-    pygame.display.flip()
-
 class Pionek(Pozycja):
     def __init__(self,nazwa,ID):
         self._nazwa_gracza = nazwa
