@@ -26,7 +26,6 @@ class Warcaby():
         self.tab_black =[]
         self.turn = 0
 
-
 #metoda ktora uzupelnia poczatkowe wspolrzedne pionkow dla obu stron
     def start(self):
         """
@@ -127,13 +126,18 @@ class Warcaby():
             print("Wygral gracz czarny")
         if len(self.tab_black) == 0:
             print("Wygral gracz bialy")
+
+        pionek = Pionek(0)
+        pionek.x = 0
+        pionek.y = 0
+
         rysuj_plansze(self.tab_white, self.tab_black)
         a = 0
         nie_ma =0
 #biały
         if self.turn % 2 == 0:
             print("biały rusza: tura:",self.turn)
-            b_turn = czy_bicie(self.turn,self.tab_white,self.tab_black)
+            b_turn = czy_bicie(self.turn,self.tab_white,self.tab_black,pionek)
             for i in range(len(self.tab_white)):
                 if self.tab_white[i].f_bicia == 0:
                     a += 1
@@ -150,11 +154,15 @@ class Warcaby():
                                     if pos[0] // size == self.tab_white[i].x and pos[1] // size == self.tab_white[i].y and self.tab_white[i].f_bicia == 1:
                                         while b_turn:
                                             b = bicie(self.tab_white[i])
+                                            for i in range(len(self.tab_white)):
+                                                self.tab_white[i].f_bicia = 0
                                             self.tab_white[i].x = b.x
                                             self.tab_white[i].y = b.y
+                                            pionek.x = b.x
+                                            pionek.y = b.y
                                             rysuj_plansze(self.tab_white, self.tab_black)
                                             repr_graf()
-                                            b_turn = czy_bicie(self.turn, self.tab_white, self.tab_black)
+                                            b_turn = czy_bicie(self.turn, self.tab_white, self.tab_black,pionek)
                                         self.turn += 1
                                         turn = False
                                     else:
@@ -182,7 +190,7 @@ class Warcaby():
 #czarny
         else:
             print("czarny rusza: tura:",self.turn)
-            b_turn = czy_bicie(self.turn,self.tab_white,self.tab_black)
+            b_turn = czy_bicie(self.turn,self.tab_white,self.tab_black,pionek)
             for i in range(len(self.tab_black)):
                 if self.tab_black[i].f_bicia == 0:
                     a += 1
@@ -199,11 +207,15 @@ class Warcaby():
                                     if pos[0] // size == self.tab_black[i].x and pos[1] // size == self.tab_black[i].y and self.tab_black[i].f_bicia == 1:
                                         while b_turn:
                                             b = bicie(self.tab_black[i])
+                                            for i in range(len(self.tab_black)):
+                                                self.tab_black[i].f_bicia = 0
                                             self.tab_black[i].x = b.x
                                             self.tab_black[i].y = b.y
+                                            pionek.x = b.x
+                                            pionek.y = b.y
                                             rysuj_plansze(self.tab_white, self.tab_black)
                                             repr_graf()
-                                            b_turn = czy_bicie(self.turn, self.tab_white, self.tab_black)
+                                            b_turn = czy_bicie(self.turn, self.tab_white, self.tab_black,pionek)
                                         self.turn += 1
                                         turn = False
                                     else:
@@ -231,18 +243,27 @@ class Warcaby():
 
 #metoda do usowania pionków z planszy
     def usun(self,p, u_x, u_y):
-        if p.flaga == 2 and plansza[u_x][u_y]==3:
+        if p.flaga == 4 or p.flaga == 2 and plansza[u_x][u_y]==3:
             for i in range(0,len(self.tab_black)-1):
                 if self.tab_black[i].x == u_x and self.tab_black[i].y == u_y :
                     self.tab_black.remove(self.tab_black[i])
                     plansza[u_x][u_y] = 1
                     plansza[p.x][p.y] = 1
-        if p.flaga == 3 and plansza[u_x][u_y]==2:
+        if p.flaga == 3 or p.flaga == 5 and plansza[u_x][u_y]==2:
             for i in range(0,len(self.tab_white)-1):
                 if self.tab_white[i].x == u_x and self.tab_white[i].y == u_y :
                     self.tab_white.remove(self.tab_white[i])
                     plansza[u_x][u_y] = 1
                     plansza[p.x][p.y] = 1
+
+    def wys(self):
+        print("dlugos tablicy bialej=",len(self.tab_white))
+        print("dlugos tablicy czarnej=", len(self.tab_black))
+        for i in range(len(self.tab_white)):
+            print(self.tab_white[i].x,self.tab_white[i].y,' , ',end='')
+        print("")
+        for i in range(len(self.tab_black)):
+            print(self.tab_black[i].x,self.tab_black[i].y,' , ',end='')
 
 #metoda do graficznej reprezentacji aktualnego przebiegu rozgrywki
 def rysuj_plansze(tab_white,tab_black):
@@ -281,77 +302,89 @@ def rysuj_plansze(tab_white,tab_black):
 #funkcja sprawdzajaca mozliwosc bicia
 #poniewaz bicie jest obowiazkowe to wywoluje ta funkcje na poczatku kazdej tury
 #sprawdzam wszystkie pionki danego gracza (w zaleznosci od tury) w poszukiwaniu możliwości bica. Jeżeli takie wystąpi, przypisuje do flagi pionka f_bicie wartosc == 1 aby w wyborze pionka, można było wybrać tylko figurę zdolna do bicia
-def czy_bicie(turn, tab_white, tab_black):
+def czy_bicie(turn, tab_white, tab_black, p):
     print("jestem w funkcji czy_bicie")
     print("czy mozna wykonac bicie ?")
-    ilosc_bic = 0
+    ilosc_bic = 12*[0]
     if turn % 2 == 0 :
         for l in range(len(tab_white)):
-            if tab_white[l].x != 1 and tab_white[l].y != 0 and tab_white[l].x != 0 and tab_white[l].y != 1:
-                if (plansza[tab_white[l].x - 2][tab_white[l].y - 2] == 1) and plansza[tab_white[l].x - 1][tab_white[l].y - 1] == 3 or plansza[tab_white[l].x - 1][tab_white[l].y - 1] == 5:
-                    print("TAK:[lewo-gora]",tab_white[l].x,tab_white[l].y )
-                    tab_white[l].f_bicia = 1
-                    ilosc_bic += 1
-
-            if tab_white[l].x != 6 and tab_white[l].x != 7 and tab_white[l].y != 0 and tab_white[l].y != 1:
-                if (plansza[tab_white[l].x + 2][tab_white[l].y - 2] == 1) and plansza[tab_white[l].x + 1][tab_white[l].y - 1] == 3 or plansza[tab_white[l].x + 1][tab_white[l].y - 1] == 5:
-                    print("TAK:[prawo-gora]",tab_white[l].x,tab_white[l].y)
-                    tab_white[l].f_bicia = 1
-                    ilosc_bic += 1
-
-            if tab_white[l].x != 6 and tab_white[l].x != 7 and tab_white[l].y != 6 and tab_white[l].y != 7:
-                if (plansza[tab_white[l].x + 2][tab_white[l].y + 2] == 1) and plansza[tab_white[l].x + 1][tab_white[l].y + 1] == 3 or plansza[tab_white[l].x + 1][tab_white[l].y + 1] == 5:
-                    print("TAK:[prawo-dol]",tab_white[l].x,tab_white[l].y)
-                    tab_white[l].f_bicia = 1
-                    ilosc_bic += 1
-
-            if tab_white[l].x != 0 and tab_white[l].x != 1 and tab_white[l].y != 6 and tab_white[l].y != 7:
-                if (plansza[tab_white[l].x - 2][tab_white[l].y + 2] == 1) and plansza[tab_white[l].x - 1][tab_white[l].y + 1] == 3 or plansza[tab_white[l].x - 1][tab_white[l].y + 1] == 5:
-                    print("TAK:[lewo-dol]",tab_white[l].x,tab_white[l].y)
-                    tab_white[l].f_bicia = 1
-                    ilosc_bic += 1
-
-        if ilosc_bic != 0:
-            return True
-        else:
-            print("nie można wykonac bica\nwykonaj zwykly ruch")
-            for i in range(len(tab_white)):
-                tab_white[i].f_bicia = 0
-            return False
-
+            if tab_white[l].x == p.x and tab_white[l].y == p.y:
+                ilosc_bic[l] = sprawdz_bicie(turn,tab_white,l)
+        if p.flaga == 0:
+            for l in range(len(tab_white)):
+                ilosc_bic[l] = sprawdz_bicie(turn, tab_white, l)
     if turn % 2 != 0:
         for l in range(len(tab_black)):
-
-            if tab_black[l].x != 0 and tab_black[l].x != 1 and tab_black[l].y != 0 and tab_black[l].y != 1:
-                if (plansza[tab_black[l].x - 2][tab_black[l].y - 2] == 1) and plansza[tab_black[l].x - 1][tab_black[l].y - 1] == 2 or plansza[tab_black[l].x - 1][tab_black[l].y - 1] == 4:
-                    print("TAK:[lewo-gora]",tab_black[l].x,tab_black[l].y)
-                    tab_black[l].f_bicia = 1
-                    ilosc_bic += 1
-
-            if tab_black[l].x != 6 and tab_black[l].x != 7 and tab_black[l].y != 0 and tab_black[l].y != 1:
-                if (plansza[tab_black[l].x + 2][tab_black[l].y - 2] == 1) and plansza[tab_black[l].x + 1][tab_black[l].y - 1] == 2 or plansza[tab_black[l].x + 1][tab_black[l].y - 1] == 4:
-                    print("TAK:[prawo-gora]",tab_black[l].x,tab_black[l].y)
-                    tab_black[l].f_bicia = 1
-                    ilosc_bic += 1
-
-            if tab_black[l].x != 6 and tab_black[l].x != 7 and tab_black[l].y != 6 and tab_black[l].y != 7:
-                if (plansza[tab_black[l].x + 2][tab_black[l].y + 2] == 1) and plansza[tab_black[l].x + 1][tab_black[l].y + 1] == 2 or plansza[tab_black[l].x + 1][tab_black[l].y + 1] == 4:
-                    print("TAK:[prawo-dol]",tab_black[l].x,tab_black[l].y)
-                    tab_black[l].f_bicia = 1
-                    ilosc_bic += 1
-
-            if tab_black[l].x != 0 and tab_black[l].x != 1 and tab_black[l].y != 6 and tab_black[l].y != 7:
-                if (plansza[tab_black[l].x - 2][tab_black[l].y + 2] == 1) and plansza[tab_black[l].x - 1][tab_black[l].y + 1] == 2 or plansza[tab_black[l].x - 1][tab_black[l].y + 1] == 4:
-                    print("TAK:[lewo-dol]",tab_black[l].x,tab_black[l].y)
-                    tab_black[l].f_bicia = 1
-                    ilosc_bic += 1
-        if ilosc_bic != 0:
+            if tab_black[l].x == p.x and tab_black[l].y == p.y:
+                ilosc_bic[l] = sprawdz_bicie(turn, tab_black, l)
+        if p.flaga == 0:
+            for l in range(len(tab_black)):
+                ilosc_bic[l] = sprawdz_bicie(turn, tab_black, l)
+    for l in range(len(ilosc_bic)):
+        if ilosc_bic[l] == 1:
             return True
-        else:
-            print("nie można wykonac bica")
-            for i in range(len(tab_black)):
-                tab_black[i].f_bicia = 0
-            return False
+    print("nie można wykonac bica")
+    return False
+
+def sprawdz_bicie(tura, tab, l):
+    ilosc_bic = 0
+    if tura %2 !=0:
+        if tab[l].x != 0 and tab[l].x != 1 and tab[l].y != 0 and tab[l].y != 1:
+            if (plansza[tab[l].x - 2][tab[l].y - 2] == 1) and plansza[tab[l].x - 1][
+                tab[l].y - 1] == 2 or plansza[tab[l].x - 1][tab[l].y - 1] == 4:
+                print("TAK:[lewo-gora]", tab[l].x, tab[l].y)
+                tab[l].f_bicia = 1
+                ilosc_bic += 1
+
+        if tab[l].x != 6 and tab[l].x != 7 and tab[l].y != 0 and tab[l].y != 1:
+            if (plansza[tab[l].x + 2][tab[l].y - 2] == 1) and plansza[tab[l].x + 1][
+                tab[l].y - 1] == 2 or plansza[tab[l].x + 1][tab[l].y - 1] == 4:
+                print("TAK:[prawo-gora]", tab[l].x, tab[l].y)
+                tab[l].f_bicia = 1
+                ilosc_bic += 1
+
+        if tab[l].x != 6 and tab[l].x != 7 and tab[l].y != 6 and tab[l].y != 7:
+            if (plansza[tab[l].x + 2][tab[l].y + 2] == 1) and plansza[tab[l].x + 1][
+                tab[l].y + 1] == 2 or plansza[tab[l].x + 1][tab[l].y + 1] == 4:
+                print("TAK:[prawo-dol]", tab[l].x, tab[l].y)
+                tab[l].f_bicia = 1
+                ilosc_bic += 1
+
+        if tab[l].x != 0 and tab[l].x != 1 and tab[l].y != 6 and tab[l].y != 7:
+            if (plansza[tab[l].x - 2][tab[l].y + 2] == 1) and plansza[tab[l].x - 1][
+                tab[l].y + 1] == 2 or plansza[tab[l].x - 1][tab[l].y + 1] == 4:
+                print("TAK:[lewo-dol]", tab[l].x, tab[l].y)
+                tab[l].f_bicia = 1
+                ilosc_bic += 1
+    if tura %2 ==0:
+        if tab[l].x != 1 and tab[l].y != 0 and tab[l].x != 0 and tab[l].y != 1:
+            if (plansza[tab[l].x - 2][tab[l].y - 2] == 1) and plansza[tab[l].x - 1][
+                tab[l].y - 1] == 3 or plansza[tab[l].x - 1][tab[l].y - 1] == 5:
+                print("TAK:[lewo-gora]", tab[l].x, tab[l].y)
+                tab[l].f_bicia = 1
+                ilosc_bic += 1
+
+        if tab[l].x != 6 and tab[l].x != 7 and tab[l].y != 0 and tab[l].y != 1:
+            if (plansza[tab[l].x + 2][tab[l].y - 2] == 1) and plansza[tab[l].x + 1][
+                tab[l].y - 1] == 3 or plansza[tab[l].x + 1][tab[l].y - 1] == 5:
+                print("TAK:[prawo-gora]", tab[l].x, tab[l].y)
+                tab[l].f_bicia = 1
+                ilosc_bic += 1
+
+        if tab[l].x != 6 and tab[l].x != 7 and tab[l].y != 6 and tab[l].y != 7:
+            if (plansza[tab[l].x + 2][tab[l].y + 2] == 1) and plansza[tab[l].x + 1][
+                tab[l].y + 1] == 3 or plansza[tab[l].x + 1][tab[l].y + 1] == 5:
+                print("TAK:[prawo-dol]", tab[l].x, tab[l].y)
+                tab[l].f_bicia = 1
+                ilosc_bic += 1
+
+        if tab[l].x != 0 and tab[l].x != 1 and tab[l].y != 6 and tab[l].y != 7:
+            if (plansza[tab[l].x - 2][tab[l].y + 2] == 1) and plansza[tab[l].x - 1][
+                tab[l].y + 1] == 3 or plansza[tab[l].x - 1][tab[l].y + 1] == 5:
+                print("TAK:[lewo-dol]", tab[l].x, tab[l].y)
+                tab[l].f_bicia = 1
+                ilosc_bic += 1
+    return ilosc_bic
 
 #funkcja bicia
 def bicie(pionek):
@@ -399,6 +432,7 @@ def bicie(pionek):
                         print("wybrane pole nie jest polem czarnym")
                     else:
                         print("wybrane pole nie jest puste")
+        game.wys()
 
 #funkcja sprawdzajaca mozliwosc ruchu przekazanym jako argument pionekim
 def czy_ruch(pionek):
@@ -421,7 +455,7 @@ def czy_ruch(pionek):
             print("nie można wykonac ruchu")
             return False
 
-    else:
+    elif pionek.flaga == 3:
 
         if pionek.x != 7 and pionek.y != 7 and plansza[pionek.x + 1][pionek.y + 1] == 1:
             print("[prawo-dol]",pionek.x,pionek.y)
@@ -429,6 +463,52 @@ def czy_ruch(pionek):
 
         if pionek.x != 0 and pionek.y != 7 and plansza[pionek.x - 1][pionek.y + 1] == 1:
             print("[lewo-dol]",pionek.x,pionek.y)
+            i += 1
+
+        if i != 0:
+            return True
+        else:
+            print("nie można wykonac ruchu")
+            return False
+
+    elif pionek.flaga == 4:
+        if pionek.x != 0 and pionek.y != 0 and plansza[pionek.x - 1][pionek.y - 1] == 1:
+            print("[lewo-gora]",pionek.x,pionek.y)
+            i +=1
+
+        if pionek.x != 7 and pionek.y != 0 and plansza[pionek.x + 1][pionek.y - 1] == 1:
+            print("[prawo-gora]",pionek.x,pionek.y)
+            i +=1
+
+        if pionek.x != 7 and pionek.y != 7 and plansza[pionek.x + 1][pionek.y + 1] == 1:
+            print("[prawo-dol]", pionek.x, pionek.y)
+            i += 1
+
+        if pionek.x != 0 and pionek.y != 7 and plansza[pionek.x - 1][pionek.y + 1] == 1:
+            print("[lewo-dol]", pionek.x, pionek.y)
+            i += 1
+
+        if i != 0:
+            return True
+        else:
+            print("nie można wykonac ruchu")
+            return False
+
+    elif pionek.flaga == 5:
+        if pionek.x != 0 and pionek.y != 0 and plansza[pionek.x - 1][pionek.y - 1] == 1:
+            print("[lewo-gora]", pionek.x, pionek.y)
+            i += 1
+
+        if pionek.x != 7 and pionek.y != 0 and plansza[pionek.x + 1][pionek.y - 1] == 1:
+            print("[prawo-gora]", pionek.x, pionek.y)
+            i += 1
+
+        if pionek.x != 7 and pionek.y != 7 and plansza[pionek.x + 1][pionek.y + 1] == 1:
+            print("[prawo-dol]", pionek.x, pionek.y)
+            i += 1
+
+        if pionek.x != 0 and pionek.y != 7 and plansza[pionek.x - 1][pionek.y + 1] == 1:
+            print("[lewo-dol]", pionek.x, pionek.y)
             i += 1
 
         if i != 0:
@@ -450,20 +530,26 @@ def ruch(pionek):
                 if pygame.mouse.get_pressed()[0]:
                     pos = pygame.mouse.get_pos()
                     if (plansza[pos[0]//size][pos[1]//size] == 1):
-                        if (pos[0] // size - pionek.x == -1 or pos[0] // size - pionek.x == 1) and (pos[1] // size - pionek.y == 1): #dla bialych
+                        if pionek.flaga == 3 and (pos[0] // size - pionek.x == -1 or pos[0] // size - pionek.x == 1) and (pos[1] // size - pionek.y == 1):
                             plansza[pionek.x][pionek.y] = 1
                             pionek.x = pos[0] // size
                             pionek.y = pos[1] // size
                             plansza[pionek.x][pionek.y] = pionek.flaga
                             return pionek
-                        if (pos[0] // size - pionek.x == -1 or pos[0] // size - pionek.x == 1) and (pos[1] // size - pionek.y == -1): #dla czarnych
+                        if pionek.flaga == 2 and (pos[0] // size - pionek.x == -1 or pos[0] // size - pionek.x == 1) and (pos[1] // size - pionek.y == -1):
+                            plansza[pionek.x][pionek.y] = 1
+                            pionek.x = pos[0] // size
+                            pionek.y = pos[1] // size
+                            plansza[pionek.x][pionek.y] = pionek.flaga
+                            return pionek
+                        if (pionek.flaga == 4 or pionek.flaga == 5) and (pos[0] // size - pionek.x == pos[1] // size - pionek.y or pos[0] // size - pionek.x == -1*(pos[1] // size - pionek.y)):
                             plansza[pionek.x][pionek.y] = 1
                             pionek.x = pos[0] // size
                             pionek.y = pos[1] // size
                             plansza[pionek.x][pionek.y] = pionek.flaga
                             return pionek
                         else:
-                            print("nie można poruszyc sie w wyznaczona pozycje {funkcja czy_ruch}")
+                            print("nie można poruszyc sie w wyznaczona pozycje")
 
                     if plansza[pos[0]//size][pos[1]//size] == 0:
                         print("wybrane pole nie jest czarne")
@@ -515,6 +601,6 @@ def repr_graf():
 game = Warcaby()
 game.start()
 while True:
-    print("============================")
+    print("=====================================")
     repr_graf()
     game.choice_function()
