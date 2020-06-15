@@ -26,7 +26,6 @@ class Warcaby():
         self.tab_black =[]
         self.turn = 0
 
-
 #metoda ktora uzupelnia poczatkowe wspolrzedne pionkow dla obu stron
     def start(self):
         """
@@ -121,13 +120,14 @@ class Warcaby():
                     else:
                         plansza[x][y] = 0
 
-
 #metoda ruchu i bicia z instrukcjami logicznymi
     def choice_function(self):
         if len(self.tab_white) == 0:
             print("Wygral gracz czarny")
+            exit()
         if len(self.tab_black) == 0:
             print("Wygral gracz bialy")
+            exit()
         rysuj_plansze(self.tab_white, self.tab_black)
         a = 0
         nie_ma =0
@@ -178,8 +178,8 @@ class Warcaby():
                                             nie_ma = 0
             for i in range(len(self.tab_white)):
                 if self.tab_white[i].y == 0:
-                    self.tab_white[i].flaga += 2
-                    plansza[self.tab_white[i].x][self.tab_white[i].y] += 2
+                    self.tab_white[i].flaga = 4
+                    plansza[self.tab_white[i].x][self.tab_white[i].y] = 4
 #czarny
         else:
             print("czarny rusza: tura:",self.turn)
@@ -227,8 +227,8 @@ class Warcaby():
                                             nie_ma = 0
             for i in range(len(self.tab_black)):
                 if self.tab_black[i].y == 7:
-                    self.tab_black[i].flaga += 2
-                    plansza[self.tab_black[i].x][self.tab_black[i].y] +=2
+                    self.tab_black[i].flaga = 5
+                    plansza[self.tab_black[i].x][self.tab_black[i].y] = 5
 
 #metoda do usowania pionków z planszy
     def usun(self,p, u_x, u_y):
