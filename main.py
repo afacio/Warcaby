@@ -238,12 +238,14 @@ class Warcaby():
                     self.tab_black.remove(self.tab_black[i])
                     plansza[u_x][u_y] = 1
                     plansza[p.x][p.y] = 1
+                    break
         if p.flaga == 3 or p.flaga == 5 and plansza[u_x][u_y]==2 or plansza[u_x][u_y]==4:
             for i in range(len(self.tab_white)):
                 if self.tab_white[i].x == u_x and self.tab_white[i].y == u_y :
                     self.tab_white.remove(self.tab_white[i])
                     plansza[u_x][u_y] = 1
                     plansza[p.x][p.y] = 1
+                    break
 
 #metoda do graficznej reprezentacji aktualnego przebiegu rozgrywki
 def rysuj_plansze(tab_white,tab_black):
