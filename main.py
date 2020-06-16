@@ -290,71 +290,149 @@ def czy_bicie(turn, tab_white, tab_black):
     ilosc_bic = 0
     if turn % 2 == 0 :
         for l in range(len(tab_white)):
-            if tab_white[l].x != 1 and tab_white[l].y != 0 and tab_white[l].x != 0 and tab_white[l].y != 1:
-                if (plansza[tab_white[l].x - 2][tab_white[l].y - 2] == 1) and plansza[tab_white[l].x - 1][tab_white[l].y - 1] == 3 or plansza[tab_white[l].x - 1][tab_white[l].y - 1] == 5:
-                    print("TAK:[lewo-gora]",tab_white[l].x,tab_white[l].y )
-                    tab_white[l].f_bicia = 1
-                    ilosc_bic += 1
+            if tab_white[l].flaga == 2:
+                if tab_white[l].x != 1 and tab_white[l].y != 0 and tab_white[l].x != 0 and tab_white[l].y != 1:
+                    if (plansza[tab_white[l].x - 2][tab_white[l].y - 2] == 1) and (plansza[tab_white[l].x - 1][tab_white[l].y - 1] == 3 or plansza[tab_white[l].x - 1][tab_white[l].y - 1] == 5):
+                        print("TAK:[lewo-gora]",tab_white[l].x,tab_white[l].y )
+                        tab_white[l].f_bicia = 1
+                        ilosc_bic += 1
 
-            if tab_white[l].x != 6 and tab_white[l].x != 7 and tab_white[l].y != 0 and tab_white[l].y != 1:
-                if (plansza[tab_white[l].x + 2][tab_white[l].y - 2] == 1) and plansza[tab_white[l].x + 1][tab_white[l].y - 1] == 3 or plansza[tab_white[l].x + 1][tab_white[l].y - 1] == 5:
-                    print("TAK:[prawo-gora]",tab_white[l].x,tab_white[l].y)
-                    tab_white[l].f_bicia = 1
-                    ilosc_bic += 1
+                if tab_white[l].x != 6 and tab_white[l].x != 7 and tab_white[l].y != 0 and tab_white[l].y != 1:
+                    if (plansza[tab_white[l].x + 2][tab_white[l].y - 2] == 1) and (plansza[tab_white[l].x + 1][tab_white[l].y - 1] == 3 or plansza[tab_white[l].x + 1][tab_white[l].y - 1] == 5):
+                        print("TAK:[prawo-gora]",tab_white[l].x,tab_white[l].y)
+                        tab_white[l].f_bicia = 1
+                        ilosc_bic += 1
 
-            if tab_white[l].x != 6 and tab_white[l].x != 7 and tab_white[l].y != 6 and tab_white[l].y != 7:
-                if (plansza[tab_white[l].x + 2][tab_white[l].y + 2] == 1) and plansza[tab_white[l].x + 1][tab_white[l].y + 1] == 3 or plansza[tab_white[l].x + 1][tab_white[l].y + 1] == 5:
-                    print("TAK:[prawo-dol]",tab_white[l].x,tab_white[l].y)
-                    tab_white[l].f_bicia = 1
-                    ilosc_bic += 1
+                if tab_white[l].x != 6 and tab_white[l].x != 7 and tab_white[l].y != 6 and tab_white[l].y != 7:
+                    if (plansza[tab_white[l].x + 2][tab_white[l].y + 2] == 1) and (plansza[tab_white[l].x + 1][tab_white[l].y + 1] == 3 or plansza[tab_white[l].x + 1][tab_white[l].y + 1] == 5):
+                        print("TAK:[prawo-dol]",tab_white[l].x,tab_white[l].y)
+                        tab_white[l].f_bicia = 1
+                        ilosc_bic += 1
 
-            if tab_white[l].x != 0 and tab_white[l].x != 1 and tab_white[l].y != 6 and tab_white[l].y != 7:
-                if (plansza[tab_white[l].x - 2][tab_white[l].y + 2] == 1) and plansza[tab_white[l].x - 1][tab_white[l].y + 1] == 3 or plansza[tab_white[l].x - 1][tab_white[l].y + 1] == 5:
-                    print("TAK:[lewo-dol]",tab_white[l].x,tab_white[l].y)
-                    tab_white[l].f_bicia = 1
-                    ilosc_bic += 1
+                if tab_white[l].x != 0 and tab_white[l].x != 1 and tab_white[l].y != 6 and tab_white[l].y != 7:
+                    if (plansza[tab_white[l].x - 2][tab_white[l].y + 2] == 1) and (plansza[tab_white[l].x - 1][tab_white[l].y + 1] == 3 or plansza[tab_white[l].x - 1][tab_white[l].y + 1] == 5):
+                        print("TAK:[lewo-dol]",tab_white[l].x,tab_white[l].y)
+                        tab_white[l].f_bicia = 1
+                        ilosc_bic += 1
 
-        if ilosc_bic != 0:
-            return True
-        else:
-            print("nie można wykonac bica\nwykonaj zwykly ruch")
-            for i in range(len(tab_white)):
-                tab_white[i].f_bicia = 0
-            return False
+            if tab_white[l].flaga == 4:
+                if tab_white[l].x != 1 and tab_white[l].y != 0 and tab_white[l].x != 0 and tab_white[l].y != 1:
+                    for i in range(1, 5):
+                        if (tab_white[l].x - i == 1 or tab_white[l].y - i == 1) and plansza[tab_white[l].x - i][tab_white[l].y - i] == 1:
+                            break
+                        else:
+                            if (plansza[tab_white[l].x - i][tab_white[l].y - i] == 3 or plansza[tab_white[l].x - i][tab_white[l].y - i] == 5) and plansza[tab_white[l].x - i - 1][tab_white[l].y - i - 1] == 1 and plansza[tab_white[l].x - i + 2][tab_white[l].y - i + 2] == 1:
+                                print("TAK:[lewo-gora]", tab_white[l].x, tab_white[l].y)
+                                tab_white[l].f_bicia = 1
+                                ilosc_bic += 1
+
+                if tab_white[l].x != 6 and tab_white[l].x != 7 and tab_white[l].y != 0 and tab_white[l].y != 1:
+                    for i in range(1, 5):
+                        if (tab_white[l].x + i == 6 or tab_white[l].y - i == 1) and plansza[tab_white[l].x + i][tab_white[l].y - i] == 1:
+                            break
+                        else:
+                            if (plansza[tab_white[l].x + i][tab_white[l].y - i] == 3 or plansza[tab_white[l].x + i][tab_white[l].y - i] == 5) and plansza[tab_white[l].x + i + 1][tab_white[l].y - i - 1] == 1 and plansza[tab_white[l].x + i - 2][tab_white[l].y - i + 2] == 1:
+                                print("TAK:[prawo-gora]", tab_white[l].x, tab_white[l].y)
+                                tab_white[l].f_bicia = 1
+                                ilosc_bic += 1
+
+                if tab_white[l].x != 6 and tab_white[l].x != 7 and tab_white[l].y != 6 and tab_white[l].y != 7:
+                    for i in range(1, 5):
+                        if (tab_white[l].x + i == 6 or tab_white[l].y + i == 6) and plansza[tab_white[l].x + i][tab_white[l].y + i] == 1:
+                            break
+                        else:
+                            if (plansza[tab_white[l].x + i][tab_white[l].y + i] == 3 or plansza[tab_white[l].x + i][tab_white[l].y + i] == 5) and plansza[tab_white[l].x + i + 1][tab_white[l].y + i + 1] == 1 and plansza[tab_white[l].x + i - 2][tab_white[l].y + i - 2] == 1:
+                                print("TAK:[prawo-dol]", tab_white[l].x, tab_white[l].y)
+                                tab_white[l].f_bicia = 1
+                                ilosc_bic += 1
+
+                if tab_white[l].x != 0 and tab_white[l].x != 1 and tab_white[l].y != 6 and tab_white[l].y != 7:
+                    for i in range(1, 5):
+                        if (tab_white[l].x - i == 1 or tab_white[l].y + i == 6) and plansza[tab_white[l].x - i][tab_white[l].y + i] == 1:
+                            break
+                        else:
+                            if (plansza[tab_white[l].x - i][tab_white[l].y + i] == 3 or plansza[tab_white[l].x - i][tab_white[l].y + i] == 5) and plansza[tab_white[l].x - i - 1][tab_white[l].y + i + 1] == 1 and plansza[tab_white[l].x - i + 2][tab_white[l].y + i - 2] == 1:
+                                print("TAK:[lewo-dol]", tab_white[l].x, tab_white[l].y)
+                                tab_white[l].f_bicia = 1
+                                ilosc_bic += 1
 
     if turn % 2 != 0:
         for l in range(len(tab_black)):
+            if tab_black[l].flaga == 3:
+                if tab_black[l].x != 0 and tab_black[l].x != 1 and tab_black[l].y != 0 and tab_black[l].y != 1:
+                    if (plansza[tab_black[l].x - 2][tab_black[l].y - 2] == 1) and plansza[tab_black[l].x - 1][tab_black[l].y - 1] == 2 or plansza[tab_black[l].x - 1][tab_black[l].y - 1] == 4:
+                        print("TAK:[lewo-gora]",tab_black[l].x,tab_black[l].y)
+                        tab_black[l].f_bicia = 1
+                        ilosc_bic += 1
 
-            if tab_black[l].x != 0 and tab_black[l].x != 1 and tab_black[l].y != 0 and tab_black[l].y != 1:
-                if (plansza[tab_black[l].x - 2][tab_black[l].y - 2] == 1) and plansza[tab_black[l].x - 1][tab_black[l].y - 1] == 2 or plansza[tab_black[l].x - 1][tab_black[l].y - 1] == 4:
-                    print("TAK:[lewo-gora]",tab_black[l].x,tab_black[l].y)
-                    tab_black[l].f_bicia = 1
-                    ilosc_bic += 1
+                if tab_black[l].x != 6 and tab_black[l].x != 7 and tab_black[l].y != 0 and tab_black[l].y != 1:
+                    if (plansza[tab_black[l].x + 2][tab_black[l].y - 2] == 1) and plansza[tab_black[l].x + 1][tab_black[l].y - 1] == 2 or plansza[tab_black[l].x + 1][tab_black[l].y - 1] == 4:
+                        print("TAK:[prawo-gora]",tab_black[l].x,tab_black[l].y)
+                        tab_black[l].f_bicia = 1
+                        ilosc_bic += 1
 
-            if tab_black[l].x != 6 and tab_black[l].x != 7 and tab_black[l].y != 0 and tab_black[l].y != 1:
-                if (plansza[tab_black[l].x + 2][tab_black[l].y - 2] == 1) and plansza[tab_black[l].x + 1][tab_black[l].y - 1] == 2 or plansza[tab_black[l].x + 1][tab_black[l].y - 1] == 4:
-                    print("TAK:[prawo-gora]",tab_black[l].x,tab_black[l].y)
-                    tab_black[l].f_bicia = 1
-                    ilosc_bic += 1
+                if tab_black[l].x != 6 and tab_black[l].x != 7 and tab_black[l].y != 6 and tab_black[l].y != 7:
+                    if (plansza[tab_black[l].x + 2][tab_black[l].y + 2] == 1) and plansza[tab_black[l].x + 1][tab_black[l].y + 1] == 2 or plansza[tab_black[l].x + 1][tab_black[l].y + 1] == 4:
+                        print("TAK:[prawo-dol]",tab_black[l].x,tab_black[l].y)
+                        tab_black[l].f_bicia = 1
+                        ilosc_bic += 1
 
-            if tab_black[l].x != 6 and tab_black[l].x != 7 and tab_black[l].y != 6 and tab_black[l].y != 7:
-                if (plansza[tab_black[l].x + 2][tab_black[l].y + 2] == 1) and plansza[tab_black[l].x + 1][tab_black[l].y + 1] == 2 or plansza[tab_black[l].x + 1][tab_black[l].y + 1] == 4:
-                    print("TAK:[prawo-dol]",tab_black[l].x,tab_black[l].y)
-                    tab_black[l].f_bicia = 1
-                    ilosc_bic += 1
+                if tab_black[l].x != 0 and tab_black[l].x != 1 and tab_black[l].y != 6 and tab_black[l].y != 7:
+                    if (plansza[tab_black[l].x - 2][tab_black[l].y + 2] == 1) and plansza[tab_black[l].x - 1][tab_black[l].y + 1] == 2 or plansza[tab_black[l].x - 1][tab_black[l].y + 1] == 4:
+                        print("TAK:[lewo-dol]",tab_black[l].x,tab_black[l].y)
+                        tab_black[l].f_bicia = 1
+                        ilosc_bic += 1
 
-            if tab_black[l].x != 0 and tab_black[l].x != 1 and tab_black[l].y != 6 and tab_black[l].y != 7:
-                if (plansza[tab_black[l].x - 2][tab_black[l].y + 2] == 1) and plansza[tab_black[l].x - 1][tab_black[l].y + 1] == 2 or plansza[tab_black[l].x - 1][tab_black[l].y + 1] == 4:
-                    print("TAK:[lewo-dol]",tab_black[l].x,tab_black[l].y)
-                    tab_black[l].f_bicia = 1
-                    ilosc_bic += 1
-        if ilosc_bic != 0:
-            return True
-        else:
-            print("nie można wykonac bica")
-            for i in range(len(tab_black)):
-                tab_black[i].f_bicia = 0
-            return False
+            if tab_black[l].flaga == 5:
+                if tab_black[l].x != 1 and tab_black[l].y != 0 and tab_black[l].x != 0 and tab_black[l].y != 1:
+                    for i in range(1, 5):
+                        if (tab_black[l].x - i == 1 or tab_black[l].y - i == 1) and plansza[tab_black[l].x - i][tab_black[l].y - i] == 1:
+                            break
+                        else:
+                            if (plansza[tab_black[l].x - i][tab_black[l].y - i] == 3 or plansza[tab_black[l].x - i][tab_black[l].y - i] == 5) and plansza[tab_black[l].x - i - 1][tab_black[l].y - i - 1] == 1:
+                                print("TAK:[lewo-gora]", tab_black[l].x, tab_black[l].y)
+                                tab_black[l].f_bicia = 1
+                                ilosc_bic += 1
+
+                if tab_black[l].x != 6 and tab_black[l].x != 7 and tab_black[l].y != 0 and tab_black[l].y != 1:
+                    for i in range(1, 5):
+                        if (tab_black[l].x + i == 6 or tab_black[l].y - i == 1) and plansza[tab_black[l].x + i][tab_black[l].y - i] == 1:
+                            break
+                        else:
+                            if (plansza[tab_black[l].x + i][tab_black[l].y - i] == 3 or plansza[tab_black[l].x + i][tab_black[l].y - i] == 5) and plansza[tab_black[l].x + i + 1][tab_black[l].y - i - 1] == 1:
+                                print("TAK:[prawo-gora]", tab_black[l].x, tab_black[l].y)
+                                tab_black[l].f_bicia = 1
+                                ilosc_bic += 1
+
+                if tab_black[l].x != 6 and tab_black[l].x != 7 and tab_black[l].y != 6 and tab_black[l].y != 7:
+                    for i in range(1, 5):
+                        if (tab_black[l].x + i == 6 or tab_black[l].y + i == 6) and plansza[tab_black[l].x + i][tab_black[l].y + i] == 1:
+                            break
+                        else:
+                            if (plansza[tab_black[l].x + i][tab_black[l].y + i] == 3 or plansza[tab_black[l].x + i][tab_black[l].y + i] == 5) and plansza[tab_black[l].x + i + 1][tab_black[l].y + i + 1] == 1:
+                                print("TAK:[prawo-dol]", tab_black[l].x, tab_black[l].y)
+                                tab_black[l].f_bicia = 1
+                                ilosc_bic += 1
+
+                if tab_black[l].x != 0 and tab_black[l].x != 1 and tab_black[l].y != 6 and tab_black[l].y != 7:
+                    for i in range(1, 5):
+                        if (tab_black[l].x - i == 1 or tab_black[l].y + i == 6) and plansza[tab_black[l].x - i][tab_black[l].y + i] == 1:
+                            break
+                        else:
+                            if (plansza[tab_black[l].x - i][tab_black[l].y + i] == 3 or plansza[tab_black[l].x - i][tab_black[l].y + i] == 5) and plansza[tab_black[l].x - i - 1][tab_black[l].y + i + 1] == 1:
+                                print("TAK:[lewo-dol]", tab_black[l].x, tab_black[l].y)
+                                tab_black[l].f_bicia = 1
+                                ilosc_bic += 1
+
+    if ilosc_bic != 0:
+        return True
+    else:
+        print("nie można wykonac bica\nwykonaj zwykly ruch")
+        for i in range(len(tab_white)):
+            tab_white[i].f_bicia = 0
+        for i in range(len(tab_black)):
+            tab_black[i].f_bicia = 0
+        return False
 
 #funkcja bicia
 def bicie(pionek):
@@ -368,36 +446,70 @@ def bicie(pionek):
                 if pygame.mouse.get_pressed()[0]:
                     pos = pygame.mouse.get_pos()
                     if plansza[pos[0] // size][pos[1] // size] == 1 :
-                        # lewo gora
-                        if (pos[0] // size + 2 - pionek.x == 0) and (pos[1] // size + 2 - pionek.y == 0) and plansza[pos[0] // size + 1][pos[1] // size + 1] != pionek.flaga and plansza[pos[0] // size + 1][pos[1] // size + 1] != pionek.flaga + 2:
-                            plansza[pos[0] // size][pos[1] // size] = pionek.flaga
-                            game.usun(pionek, pos[0] // size + 1, pos[1] // size + 1)
-                            pionek.x = pos[0] // size
-                            pionek.y = pos[1] // size
-                            return pionek
-                        # prawo gora
-                        if (pos[0] // size - 2 - pionek.x == 0) and (pos[1] // size + 2 - pionek.y == 0) and plansza[pos[0] // size - 1][pos[1] // size + 1] != pionek.flaga and plansza[pos[0] // size - 1][pos[1] // size + 1] != pionek.flaga + 2:
-                            plansza[pos[0] // size][pos[1] // size] = pionek.flaga
-                            game.usun(pionek, pos[0] // size - 1,pos[1] // size + 1)
-                            pionek.x = pos[0] // size
-                            pionek.y = pos[1] // size
-                            return pionek
-                        # prawo dol
-                        if (pos[0] // size - 2 - pionek.x == 0) and (pos[1] // size - 2 - pionek.y == 0) and plansza[pos[0] // size - 1][pos[1] // size - 1] != pionek.flaga and plansza[pos[0] // size - 1][pos[1] // size - 1] != pionek.flaga + 2:
-                            plansza[pos[0] // size][pos[1] // size] = pionek.flaga
-                            game.usun(pionek,pos[0] // size - 1,pos[1] // size - 1)
-                            pionek.x = pos[0] // size
-                            pionek.y = pos[1] // size
-                            return pionek
-                        # lewo dol
-                        if (pos[0] // size + 2 - pionek.x == 0) and (pos[1] // size - 2 - pionek.y == 0) and plansza[pos[0] // size + 1][pos[1] // size - 1] != pionek.flaga and plansza[pos[0] // size + 1][pos[1] // size - 1] != pionek.flaga + 2:
-                            plansza[pos[0] // size][pos[1] // size] = pionek.flaga
-                            game.usun(pionek, pos[0] // size + 1, pos[1] // size - 1)
-                            pionek.x = pos[0] // size
-                            pionek.y = pos[1] // size
-                            return pionek
-                        else:
-                            print("wybierz pole zgodne z zasadami gry")
+                        if pionek.flaga < 4:
+                            # lewo gora pionek
+                            if (pos[0] // size + 2 - pionek.x == 0) and (pos[1] // size + 2 - pionek.y == 0) and plansza[pos[0] // size + 1][pos[1] // size + 1] != pionek.flaga and plansza[pos[0] // size + 1][pos[1] // size + 1] != pionek.flaga + 2:
+                                plansza[pos[0] // size][pos[1] // size] = pionek.flaga
+                                game.usun(pionek, pos[0] // size + 1, pos[1] // size + 1)
+                                pionek.x = pos[0] // size
+                                pionek.y = pos[1] // size
+                                return pionek
+                            # prawo gora pionek
+                            if (pos[0] // size - 2 - pionek.x == 0) and (pos[1] // size + 2 - pionek.y == 0) and plansza[pos[0] // size - 1][pos[1] // size + 1] != pionek.flaga and plansza[pos[0] // size - 1][pos[1] // size + 1] != pionek.flaga + 2:
+                                plansza[pos[0] // size][pos[1] // size] = pionek.flaga
+                                game.usun(pionek, pos[0] // size - 1,pos[1] // size + 1)
+                                pionek.x = pos[0] // size
+                                pionek.y = pos[1] // size
+                                return pionek
+                            # prawo dol pionek
+                            if (pos[0] // size - 2 - pionek.x == 0) and (pos[1] // size - 2 - pionek.y == 0) and plansza[pos[0] // size - 1][pos[1] // size - 1] != pionek.flaga and plansza[pos[0] // size - 1][pos[1] // size - 1] != pionek.flaga + 2:
+                                plansza[pos[0] // size][pos[1] // size] = pionek.flaga
+                                game.usun(pionek,pos[0] // size - 1,pos[1] // size - 1)
+                                pionek.x = pos[0] // size
+                                pionek.y = pos[1] // size
+                                return pionek
+                            # lewo dol pionek
+                            if (pos[0] // size + 2 - pionek.x == 0) and (pos[1] // size - 2 - pionek.y == 0) and plansza[pos[0] // size + 1][pos[1] // size - 1] != pionek.flaga and plansza[pos[0] // size + 1][pos[1] // size - 1] != pionek.flaga + 2:
+                                plansza[pos[0] // size][pos[1] // size] = pionek.flaga
+                                game.usun(pionek, pos[0] // size + 1, pos[1] // size - 1)
+                                pionek.x = pos[0] // size
+                                pionek.y = pos[1] // size
+                                return pionek
+                            else:
+                                print("wybierz pole zgodne z zasadami gry")
+                        if pionek.flaga >= 4:
+                            if (pos[0]//size - pionek.x == pos[1]//size - pionek.y or pos[0]//size - pionek.x == -1*pos[1]//size - pionek.y):
+                                # lewo gora damka
+                                if plansza[pos[0] // size + 1][pos[1] // size + 1] != pionek.flaga and plansza[pos[0] // size + 1][pos[1] // size + 1] != pionek.flaga - 2:
+                                    plansza[pos[0] // size][pos[1] // size] = pionek.flaga
+                                    game.usun(pionek, pos[0] // size + 1, pos[1] // size + 1)
+                                    pionek.x = pos[0] // size
+                                    pionek.y = pos[1] // size
+                                    return pionek
+                                # prawo gora damka
+                                if plansza[pos[0] // size - 1][pos[1] // size + 1] != pionek.flaga and plansza[pos[0] // size - 1][pos[1] // size + 1] != pionek.flaga - 2:
+                                    plansza[pos[0] // size][pos[1] // size] = pionek.flaga
+                                    game.usun(pionek, pos[0] // size - 1, pos[1] // size + 1)
+                                    pionek.x = pos[0] // size
+                                    pionek.y = pos[1] // size
+                                    return pionek
+                                # prawo dol damka
+                                if plansza[pos[0] // size - 1][pos[1] // size - 1] != pionek.flaga and plansza[pos[0] // size - 1][pos[1] // size - 1] != pionek.flaga - 2:
+                                    plansza[pos[0] // size][pos[1] // size] = pionek.flaga
+                                    game.usun(pionek, pos[0] // size - 1, pos[1] // size - 1)
+                                    pionek.x = pos[0] // size
+                                    pionek.y = pos[1] // size
+                                    return pionek
+                                # lewo dol damka
+                                if plansza[pos[0] // size + 1][pos[1] // size - 1] != pionek.flaga and plansza[pos[0] // size + 1][pos[1] // size - 1] != pionek.flaga - 2:
+                                    plansza[pos[0] // size][pos[1] // size] = pionek.flaga
+                                    game.usun(pionek, pos[0] // size + 1, pos[1] // size - 1)
+                                    pionek.x = pos[0] // size
+                                    pionek.y = pos[1] // size
+                                    return pionek
+                                else:
+                                    print("wybierz pole zgodne z zasadami gry")
+
                     elif plansza[pos[0] // size][pos[1] // size] == 0:
                         print("wybrane pole nie jest polem czarnym")
                     else:
