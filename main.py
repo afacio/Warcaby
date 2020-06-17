@@ -318,7 +318,9 @@ def czy_bicie(turn, tab_white, tab_black):
             if tab_white[l].flaga == 4:
                 if tab_white[l].x != 1 and tab_white[l].y != 0 and tab_white[l].x != 0 and tab_white[l].y != 1:
                     for i in range(1, 5):
-                        if (tab_white[l].x - i != 1 or tab_white[l].y - i != 1):
+                        if (tab_white[l].x - i == 1 or tab_white[l].y - i == 1 or tab_white[l].x - i == 0 or tab_white[l].y - i == 0):
+                            break
+                        elif (tab_white[l].x - i != 1 and tab_white[l].y - i != 1 and tab_white[l].x - i != 0 and tab_white[l].y - i != 0):
                             if plansza[tab_white[l].x - i][tab_white[l].y - i] != 1 and plansza[tab_white[l].x - i - 1][tab_white[l].y - i - 1] == 1:
                                 if (plansza[tab_white[l].x - i][tab_white[l].y - i] == 3 or plansza[tab_white[l].x - i][tab_white[l].y - i] == 5) and (plansza[tab_white[l].x - i + 1][tab_white[l].y - i + 1] == 1 or plansza[tab_white[l].x - i + 1][tab_white[l].y - i + 1] == 4):
                                     print("TAK:[lewo-gora]", tab_white[l].x, tab_white[l].y)
@@ -327,7 +329,9 @@ def czy_bicie(turn, tab_white, tab_black):
 
                 if tab_white[l].x != 6 and tab_white[l].x != 7 and tab_white[l].y != 0 and tab_white[l].y != 1:
                     for i in range(1, 5):
-                        if (tab_white[l].x + i != 6 or tab_white[l].y - i != 1):
+                        if (tab_white[l].x + i == 6 or tab_white[l].y - i == 1 or tab_white[l].x + i == 7 or tab_white[l].y - i == 0):
+                            break
+                        elif (tab_white[l].x + i != 6 and tab_white[l].y - i != 1 and tab_white[l].x + i != 7 and tab_white[l].y - i != 0):
                             if plansza[tab_white[l].x + i][tab_white[l].y - i] != 1 and plansza[tab_white[l].x + i + 1][tab_white[l].y - i - 1] == 1:
                                 if (plansza[tab_white[l].x + i][tab_white[l].y - i] == 3 or plansza[tab_white[l].x + i][tab_white[l].y - i] == 5) and (plansza[tab_white[l].x + i - 1][tab_white[l].y - i + 1] == 1 or plansza[tab_white[l].x + i - 1][tab_white[l].y - i + 1] == 4):
                                     print("TAK:[prawo-gora]", tab_white[l].x, tab_white[l].y)
@@ -336,7 +340,9 @@ def czy_bicie(turn, tab_white, tab_black):
 
                 if tab_white[l].x != 6 and tab_white[l].x != 7 and tab_white[l].y != 6 and tab_white[l].y != 7:
                     for i in range(1, 5):
-                        if (tab_white[l].x + i != 6 or tab_white[l].y + i != 6):
+                        if (tab_white[l].x + i == 6 or tab_white[l].y + i == 6 or tab_white[l].x + i == 7 or tab_white[l].y + i == 7):
+                            break
+                        elif (tab_white[l].x + i != 6 and tab_white[l].y + i != 6 and tab_white[l].x + i != 7 and tab_white[l].y + i != 7):
                             if plansza[tab_white[l].x + i][tab_white[l].y + i] != 1 and plansza[tab_white[l].x + i + 1][tab_white[l].y + i + 1] == 1:
                                 if (plansza[tab_white[l].x + i][tab_white[l].y + i] == 3 or plansza[tab_white[l].x + i][tab_white[l].y + i] == 5) and (plansza[tab_white[l].x + i - 1][tab_white[l].y + i - 1] == 1 or plansza[tab_white[l].x + i - 1][tab_white[l].y + i - 1] == 4):
                                     print("TAK:[prawo-dol]", tab_white[l].x, tab_white[l].y)
@@ -345,7 +351,9 @@ def czy_bicie(turn, tab_white, tab_black):
 
                 if tab_white[l].x != 0 and tab_white[l].x != 1 and tab_white[l].y != 6 and tab_white[l].y != 7:
                     for i in range(1, 5):
-                        if (tab_white[l].x - i != 1 or tab_white[l].y + i != 6):
+                        if (tab_white[l].x - i == 1 or tab_white[l].y + i == 6 or tab_white[l].x - i == 0 or tab_white[l].y + i == 7):
+                            break
+                        elif (tab_white[l].x - i != 1 and tab_white[l].y + i != 6 and tab_white[l].x - i != 0 and tab_white[l].y + i != 7):
                             if plansza[tab_white[l].x - i][tab_white[l].y + i] != 1 and plansza[tab_white[l].x - i - 1][tab_white[l].y + i + 1] == 1:
                                 if (plansza[tab_white[l].x - i][tab_white[l].y + i] == 3 or plansza[tab_white[l].x - i][tab_white[l].y + i] == 5) and (plansza[tab_white[l].x - i + 1][tab_white[l].y + i - 1] == 1 or plansza[tab_white[l].x - i + 1][tab_white[l].y + i - 1] == 4):
                                     print("TAK:[lewo-dol]", tab_white[l].x, tab_white[l].y)
@@ -382,6 +390,8 @@ def czy_bicie(turn, tab_white, tab_black):
             if tab_black[l].flaga == 5:
                 if tab_black[l].x != 1 and tab_black[l].y != 0 and tab_black[l].x != 0 and tab_black[l].y != 1:
                     for i in range(1, 5):
+                        if (tab_black[l].x + i == 0 or tab_black[l].y + i == 0 or tab_black[l].x + i == 1 or tab_black[l].y + i == 1):
+                            break
                         if (tab_black[l].x - i != 1 and tab_black[l].y - i != 1 and tab_black[l].x - i != 0 and tab_black[l].y - i != 0):
                             if plansza[tab_black[l].x - i][tab_black[l].y - i] != 1 and plansza[tab_black[l].x - i - 1][tab_black[l].y - i - 1] == 1:
                                 if (plansza[tab_black[l].x - i][tab_black[l].y - i] == 2 or plansza[tab_black[l].x - i][tab_black[l].y - i] == 4) and (plansza[tab_black[l].x - i + 1][tab_black[l].y - i + 1] == 1 or plansza[tab_black[l].x - i + 1][tab_black[l].y - i + 1] == 5):
@@ -391,7 +401,9 @@ def czy_bicie(turn, tab_white, tab_black):
 
                 if tab_black[l].x != 6 and tab_black[l].x != 7 and tab_black[l].y != 0 and tab_black[l].y != 1:
                     for i in range(1, 5):
-                        if (tab_black[l].x + i != 6 and tab_black[l].y - i != 1 and tab_black[l].x + i != 7 and tab_black[l].y - i != 0):
+                        if (tab_black[l].x + i == 6 or tab_black[l].y + i == 0 or tab_black[l].x + i == 7 or tab_black[l].y + i == 1):
+                            break
+                        elif (tab_black[l].x + i != 6 and tab_black[l].y - i != 1 and tab_black[l].x + i != 7 and tab_black[l].y - i != 0):
                             if plansza[tab_black[l].x + i][tab_black[l].y - i] != 1 and plansza[tab_black[l].x + i + 1][tab_black[l].y - i - 1] == 1:
                                 if (plansza[tab_black[l].x + i][tab_black[l].y - i] == 2 or plansza[tab_black[l].x + i][tab_black[l].y - i] == 4) and (plansza[tab_black[l].x + i - 1][tab_black[l].y - i + 1] == 1 or plansza[tab_black[l].x + i - 1][tab_black[l].y - i + 1] == 5):
                                     print("TAK:[prawo-gora]", tab_black[l].x, tab_black[l].y)
@@ -400,7 +412,9 @@ def czy_bicie(turn, tab_white, tab_black):
 
                 if tab_black[l].x != 6 and tab_black[l].x != 7 and tab_black[l].y != 6 and tab_black[l].y != 7:
                     for i in range(1, 5):
-                        if (tab_black[l].x + i != 6 and tab_black[l].y + i != 6 and tab_black[l].x + i != 7 and tab_black[l].y + i != 7) :
+                        if (tab_black[l].x + i == 6 or tab_black[l].y + i == 6 or tab_black[l].x + i == 7 or tab_black[l].y + i == 7):
+                            break
+                        elif (tab_black[l].x + i != 6 and tab_black[l].y + i != 6 and tab_black[l].x + i != 7 and tab_black[l].y + i != 7) :
                             if plansza[tab_black[l].x + i][tab_black[l].y + i] != 1 and plansza[tab_black[l].x + i + 1][tab_black[l].y + i + 1] == 1:
                                 if (plansza[tab_black[l].x + i][tab_black[l].y + i] == 2 or plansza[tab_black[l].x + i][tab_black[l].y + i] == 4) and (plansza[tab_black[l].x + i - 1][tab_black[l].y + i - 1] == 1 or plansza[tab_black[l].x + i - 1][tab_black[l].y + i - 1] == 5):
                                     print("TAK:[prawo-dol]", tab_black[l].x, tab_black[l].y)
@@ -409,7 +423,9 @@ def czy_bicie(turn, tab_white, tab_black):
 
                 if tab_black[l].x != 0 and tab_black[l].x != 1 and tab_black[l].y != 6 and tab_black[l].y != 7:
                     for i in range(1, 5):
-                        if (tab_black[l].x - i != 1 and tab_black[l].y + i != 6 and tab_black[l].x - i != 0 and tab_black[l].y + i != 7) :
+                        if (tab_black[l].x + i == 0 or tab_black[l].y + i == 6 or tab_black[l].x + i == 1 or tab_black[l].y + i == 7):
+                            break
+                        elif (tab_black[l].x - i != 1 and tab_black[l].y + i != 6 and tab_black[l].x - i != 0 and tab_black[l].y + i != 7) :
                             if plansza[tab_black[l].x - i][tab_black[l].y + i] != 1 and plansza[tab_black[l].x - i - 1][tab_black[l].y + i + 1] == 1:
                                 if (plansza[tab_black[l].x - i][tab_black[l].y + i] == 2 or plansza[tab_black[l].x - i][tab_black[l].y + i] == 4) and (plansza[tab_black[l].x - i + 1][tab_black[l].y + i - 1] == 1 or plansza[tab_black[l].x - i + 1][tab_black[l].y + i - 1] == 5):
                                     print("TAK:[lewo-dol]", tab_black[l].x, tab_black[l].y)
