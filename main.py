@@ -486,37 +486,36 @@ def bicie(pionek):
                             else:
                                 print("wybierz pole zgodne z zasadami gry")
                         if pionek.flaga >= 4:
-                            if (pos[0]//size - pionek.x == pos[1]//size - pionek.y or pos[0]//size - pionek.x == -1*pos[1]//size - pionek.y):
-                                # lewo gora damka
-                                if plansza[pos[0] // size + 1][pos[1] // size + 1] != pionek.flaga and plansza[pos[0] // size + 1][pos[1] // size + 1] != pionek.flaga - 2:
-                                    plansza[pos[0] // size][pos[1] // size] = pionek.flaga
-                                    game.usun(pionek, pos[0] // size + 1, pos[1] // size + 1)
-                                    pionek.x = pos[0] // size
-                                    pionek.y = pos[1] // size
-                                    return pionek
-                                # prawo gora damka
-                                if plansza[pos[0] // size - 1][pos[1] // size + 1] != pionek.flaga and plansza[pos[0] // size - 1][pos[1] // size + 1] != pionek.flaga - 2:
-                                    plansza[pos[0] // size][pos[1] // size] = pionek.flaga
-                                    game.usun(pionek, pos[0] // size - 1, pos[1] // size + 1)
-                                    pionek.x = pos[0] // size
-                                    pionek.y = pos[1] // size
-                                    return pionek
-                                # prawo dol damka
-                                if plansza[pos[0] // size - 1][pos[1] // size - 1] != pionek.flaga and plansza[pos[0] // size - 1][pos[1] // size - 1] != pionek.flaga - 2:
-                                    plansza[pos[0] // size][pos[1] // size] = pionek.flaga
-                                    game.usun(pionek, pos[0] // size - 1, pos[1] // size - 1)
-                                    pionek.x = pos[0] // size
-                                    pionek.y = pos[1] // size
-                                    return pionek
-                                # lewo dol damka
-                                if plansza[pos[0] // size + 1][pos[1] // size - 1] != pionek.flaga and plansza[pos[0] // size + 1][pos[1] // size - 1] != pionek.flaga - 2:
-                                    plansza[pos[0] // size][pos[1] // size] = pionek.flaga
-                                    game.usun(pionek, pos[0] // size + 1, pos[1] // size - 1)
-                                    pionek.x = pos[0] // size
-                                    pionek.y = pos[1] // size
-                                    return pionek
-                                else:
-                                    print("wybierz pole zgodne z zasadami gry")
+                            # lewo gora damka
+                            if pos[0]//size - pionek.x == pos[1]//size - pionek.y and plansza[pos[0] // size + 1][pos[1] // size + 1] != pionek.flaga and plansza[pos[0] // size + 1][pos[1] // size + 1] != pionek.flaga - 2:
+                                plansza[pos[0] // size][pos[1] // size] = pionek.flaga
+                                game.usun(pionek, pos[0] // size + 1, pos[1] // size + 1)
+                                pionek.x = pos[0] // size
+                                pionek.y = pos[1] // size
+                                return pionek
+                            # prawo gora damka
+                            if -1*(pos[0]//size - pionek.x) == pos[1]//size - pionek.y and plansza[pos[0] // size - 1][pos[1] // size + 1] != pionek.flaga and plansza[pos[0] // size - 1][pos[1] // size + 1] != pionek.flaga - 2:
+                                plansza[pos[0] // size][pos[1] // size] = pionek.flaga
+                                game.usun(pionek, pos[0] // size - 1, pos[1] // size + 1)
+                                pionek.x = pos[0] // size
+                                pionek.y = pos[1] // size
+                                return pionek
+                            # prawo dol damka
+                            if pos[0]//size - pionek.x == pos[1]//size - pionek.y and plansza[pos[0] // size - 1][pos[1] // size - 1] != pionek.flaga and plansza[pos[0] // size - 1][pos[1] // size - 1] != pionek.flaga - 2:
+                                plansza[pos[0] // size][pos[1] // size] = pionek.flaga
+                                game.usun(pionek, pos[0] // size - 1, pos[1] // size - 1)
+                                pionek.x = pos[0] // size
+                                pionek.y = pos[1] // size
+                                return pionek
+                            # lewo dol damka
+                            if -1*(pos[0]//size - pionek.x) == pos[1]//size - pionek.y and plansza[pos[0] // size + 1][pos[1] // size - 1] != pionek.flaga and plansza[pos[0] // size + 1][pos[1] // size - 1] != pionek.flaga - 2:
+                                plansza[pos[0] // size][pos[1] // size] = pionek.flaga
+                                game.usun(pionek, pos[0] // size + 1, pos[1] // size - 1)
+                                pionek.x = pos[0] // size
+                                pionek.y = pos[1] // size
+                                return pionek
+                            else:
+                                print("wybierz pole zgodne z zasadami gry")
 
                     elif plansza[pos[0] // size][pos[1] // size] == 0:
                         print("wybrane pole nie jest polem czarnym")
