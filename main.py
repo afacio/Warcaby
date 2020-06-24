@@ -1,34 +1,43 @@
 import pygame
+#5,6
 
 plansza = 8 * [0]
 for i in range(8):
     plansza[i]= [0]*8
 
-size = 50
-white_color = [200, 200, 200]
-black_color = [100, 100, 100]
-w_pawn = pygame.transform.scale(pygame.image.load("pawn_white.png"),(size,size))
-b_pawn = pygame.transform.scale(pygame.image.load("pawn_black.png"),(size,size))
-w_queen = pygame.transform.scale(pygame.image.load("queen_white.png"),(size,size))
-b_queen = pygame.transform.scale(pygame.image.load("queen_black.png"),(size,size))
-pygame.font.init()
+SIZE = 50
+WHITE_COLOR = [200, 200, 200]
+BLACK_COLOR = [100, 100, 100]
+WHITE_PAWN = pygame.transform.scale(pygame.image.load("pawn_white.png"), (SIZE, SIZE))
+BLACK_PAWN = pygame.transform.scale(pygame.image.load("pawn_black.png"), (SIZE, SIZE))
+WHITE_QUEEN = pygame.transform.scale(pygame.image.load("queen_white.png"), (SIZE, SIZE))
+BLACK_QUEEN = pygame.transform.scale(pygame.image.load("queen_black.png"), (SIZE, SIZE))
+POLE_BIALE = 0
+POLE_CZARNE = 1
+BIALY_PIONEK = 2
+CZARNY_PIONEK = 3
+BIALA_DAMKA = 4
+CZARNA_DAMKA = 5
 
-class Pionek():
-    def __init__(self,f):
+
+class Pionek:
+    def __init__(self, flaga):
         self.x = 0
         self.y = 0
-        self.flaga = f  #flaga koloru i wartosci(pionek badz damka)
-        self.f_bicia = 0
+        self.flaga_figury = flaga  #flaga koloru i wartosci(pionek badz damka)
+        self.flaga_bicia = 0
 
-class Warcaby():
+class Warcaby:
     def __init__(self):
         self.tab_white =[]
         self.tab_black =[]
         self.turn = 0
 
 #metoda ktora uzupelnia poczatkowe wspolrzedne pionkow dla obu stron
+#przypisuje współżędne pionkom na tablicy 8x8
     def start(self):
         """
+        Wypełniam planszę oraz tablice białych/czarnych pionków odpowiednimi flagami:
             0 - pole białe
             1 - pole czarne
             2 - pionek biały
@@ -42,7 +51,7 @@ class Warcaby():
         #wypełniam plansze pionkami z odpowiednimi wspolrzednymi
         # czarne
         for i in range(0, 12):
-            tab_black.append(Pionek(3))
+            tab_black.append(Pionek(CZARNY_PIONEK)) #wytłumaczenie na początku metody
         i=1
         for j in range(0,4):
             tab_black[j].y = 0
@@ -60,7 +69,7 @@ class Warcaby():
             i += 2
         #biale
         for i in range(0, 12):
-            tab_white.append(Pionek(2))
+            tab_white.append(Pionek(BIALY_PIONEK)) #wytłumaczenie na początku metody
         i = 0
         for j in range(0, 4):
             tab_white[j].x = i
@@ -85,59 +94,59 @@ class Warcaby():
             for x in range(0, 8):
                 if y % 2 == 0:
                     if x % 2 == 0:
-                        plansza[x][y] = 0
+                        plansza[x][y] = POLE_BIALE
                     else:
-                        plansza[x][y] = 3
+                        plansza[x][y] = CZARNY_PIONEK
                 else:
                     if x % 2 == 0:
-                        plansza[x][y] = 3
+                        plansza[x][y] = CZARNY_PIONEK
                     else:
-                        plansza[x][y] = 0
+                        plansza[x][y] = POLE_BIALE
         # puste pola
         for y in range(3, 5):
             for x in range(0, 8):
                 if y % 2 == 0:
                     if x % 2 == 0:
-                        plansza[x][y] = 0
+                        plansza[x][y] = POLE_BIALE
                     else:
-                        plansza[x][y] = 1
+                        plansza[x][y] = POLE_CZARNE
                 else:
                     if x % 2 == 0:
-                        plansza[x][y] = 1
+                        plansza[x][y] = POLE_CZARNE
                     else:
-                        plansza[x][y] = 0
+                        plansza[x][y] = POLE_BIALE
         # pionki biale
         for y in range(5, 8):
             for x in range(0, 8):
                 if y % 2 == 0:
                     if x % 2 == 0:
-                        plansza[x][y] = 0
+                        plansza[x][y] = POLE_BIALE
                     else:
-                        plansza[x][y] = 2
+                        plansza[x][y] = BIALY_PIONEK
                 else:
                     if x % 2 == 0:
-                        plansza[x][y] = 2
+                        plansza[x][y] = BIALY_PIONEK
                     else:
-                        plansza[x][y] = 0
+                        plansza[x][y] = POLE_BIALE
 
 #metoda ruchu i bicia z instrukcjami logicznymi
     def choice_function(self):
-        if len(self.tab_white) == 0:
+        if not self.tab_white:
             print("Wygral gracz czarny")
             exit()
-        if len(self.tab_black) == 0:
+        if not self.tab_black:
             print("Wygral gracz bialy")
             exit()
         rysuj_plansze(self.tab_white, self.tab_black)
-        a = 0
-        nie_ma =0
+        ilosc_ruchu = 0
+        nic_wiecej =0
 #biały
         if self.turn % 2 == 0:
             print("biały rusza: tura:",self.turn)
-            b_turn = czy_bicie(self.turn,self.tab_white,self.tab_black)
+            bicie_turn = czy_bicie(self.turn,self.tab_white,self.tab_black)
             for i in range(len(self.tab_white)):
-                if self.tab_white[i].f_bicia == 0:
-                    a += 1
+                if self.tab_white[i].flaga_bicia == 0:
+                    ilosc_ruchu += 1
             turn = True
             while turn == True:
                 for event in pygame.event.get():
@@ -146,47 +155,47 @@ class Warcaby():
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if pygame.mouse.get_pressed()[0]:
                             pos = pygame.mouse.get_pos()
-                            if a != len(self.tab_white):
+                            if ilosc_ruchu != len(self.tab_white):
                                 for i in range(len(self.tab_white)):
-                                    if pos[0] // size == self.tab_white[i].x and pos[1] // size == self.tab_white[i].y and self.tab_white[i].f_bicia == 1:
-                                        while b_turn:
-                                            b = bicie(self.tab_white[i])
-                                            self.tab_white[i].x = b.x
-                                            self.tab_white[i].y = b.y
+                                    if pos[0] // SIZE == self.tab_white[i].x and pos[1] // SIZE == self.tab_white[i].y and self.tab_white[i].flaga_bicia == 1:
+                                        while bicie_turn:
+                                            nowa_pozycja_bicia = bicie(self.tab_white[i])
+                                            self.tab_white[i].x = nowa_pozycja_bicia.x
+                                            self.tab_white[i].y = nowa_pozycja_bicia.y
                                             rysuj_plansze(self.tab_white, self.tab_black)
-                                            repr_graf()
-                                            b_turn = czy_bicie(self.turn, self.tab_white, self.tab_black)
+                                            reprezentacja_terminal()
+                                            bicie_turn = czy_bicie(self.turn, self.tab_white, self.tab_black)
                                         self.turn += 1
                                         turn = False
                                     else:
-                                        nie_ma += 1
-                                        if nie_ma == len(self.tab_white):
+                                        nic_wiecej += 1
+                                        if nic_wiecej == len(self.tab_white):
                                             print("musisz wybrac pionka ktorym mozna wykonac bicie")
-                                            nie_ma = 0
-                            if a == len(self.tab_white):
+                                            nic_wiecej = 0
+                            if ilosc_ruchu == len(self.tab_white):
                                 for i in range(len(self.tab_white)):
-                                    if pos[0] // size == self.tab_white[i].x and pos[1] // size == self.tab_white[i].y and czy_ruch(self.tab_white[i]):
-                                        r = ruch(self.tab_white[i])
-                                        self.tab_white[i].x = r.x
-                                        self.tab_white[i].y = r.y
+                                    if pos[0] // SIZE == self.tab_white[i].x and pos[1] // SIZE == self.tab_white[i].y and czy_ruch(self.tab_white[i]):
+                                        nowa_pozycja_ruchu = ruch(self.tab_white[i])
+                                        self.tab_white[i].x = nowa_pozycja_ruchu.x
+                                        self.tab_white[i].y = nowa_pozycja_ruchu.y
                                         self.turn += 1
                                         turn = False
                                     else:
-                                        nie_ma += 1
-                                        if nie_ma == len(self.tab_white):
+                                        nic_wiecej += 1
+                                        if nic_wiecej == len(self.tab_white):
                                             print("Nie wybrałeś bialego pionka")
-                                            nie_ma = 0
+                                            nic_wiecej = 0
             for i in range(len(self.tab_white)):
                 if self.tab_white[i].y == 0:
-                    self.tab_white[i].flaga = 4
-                    plansza[self.tab_white[i].x][self.tab_white[i].y] = 4
+                    self.tab_white[i].flaga_figury = BIALA_DAMKA
+                    plansza[self.tab_white[i].x][self.tab_white[i].y] = BIALA_DAMKA
 #czarny
         else:
             print("czarny rusza: tura:",self.turn)
-            b_turn = czy_bicie(self.turn,self.tab_white,self.tab_black)
+            bicie_turn = czy_bicie(self.turn,self.tab_white,self.tab_black)
             for i in range(len(self.tab_black)):
-                if self.tab_black[i].f_bicia == 0:
-                    a += 1
+                if self.tab_black[i].flaga_bicia == 0:
+                    ilosc_ruchu += 1
             turn = True
             while turn == True:
                 for event in pygame.event.get():
@@ -195,56 +204,56 @@ class Warcaby():
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if pygame.mouse.get_pressed()[0]:
                             pos = pygame.mouse.get_pos()
-                            if a != len(self.tab_black):
+                            if ilosc_ruchu != len(self.tab_black):
                                 for i in range(len(self.tab_black)):
-                                    if pos[0] // size == self.tab_black[i].x and pos[1] // size == self.tab_black[i].y and self.tab_black[i].f_bicia == 1:
-                                        while b_turn:
-                                            b = bicie(self.tab_black[i])
-                                            self.tab_black[i].x = b.x
-                                            self.tab_black[i].y = b.y
+                                    if pos[0] // SIZE == self.tab_black[i].x and pos[1] // SIZE == self.tab_black[i].y and self.tab_black[i].flaga_bicia == 1:
+                                        while bicie_turn:
+                                            nowa_pozycja_bicia = bicie(self.tab_black[i])
+                                            self.tab_black[i].x = nowa_pozycja_bicia.x
+                                            self.tab_black[i].y = nowa_pozycja_bicia.y
                                             rysuj_plansze(self.tab_white, self.tab_black)
-                                            repr_graf()
-                                            b_turn = czy_bicie(self.turn, self.tab_white, self.tab_black)
+                                            reprezentacja_terminal()
+                                            bicie_turn = czy_bicie(self.turn, self.tab_white, self.tab_black)
                                         self.turn += 1
                                         turn = False
                                     else:
-                                        nie_ma += 1
-                                        if nie_ma == len(self.tab_black):
+                                        nic_wiecej += 1
+                                        if nic_wiecej == len(self.tab_black):
                                             print("musisz wybrac pionka ktorym mozna wykonac bicie")
-                                            nie_ma = 0
-                            if a == len(self.tab_black):
+                                            nic_wiecej = 0
+                            if ilosc_ruchu == len(self.tab_black):
                                 for i in range(len(self.tab_black)):
-                                    if pos[0] // size == self.tab_black[i].x and pos[1] // size == self.tab_black[i].y and czy_ruch(self.tab_black[i]):
-                                        r = ruch(self.tab_black[i])
-                                        self.tab_black[i].x = r.x
-                                        self.tab_black[i].y = r.y
+                                    if pos[0] // SIZE == self.tab_black[i].x and pos[1] // SIZE == self.tab_black[i].y and czy_ruch(self.tab_black[i]):
+                                        nowa_pozycja_ruchu = ruch(self.tab_black[i])
+                                        self.tab_black[i].x = nowa_pozycja_ruchu.x
+                                        self.tab_black[i].y = nowa_pozycja_ruchu.y
                                         self.turn += 1
                                         turn = False
                                     else:
-                                        nie_ma += 1
-                                        if nie_ma == len(self.tab_black):
+                                        nic_wiecej += 1
+                                        if nic_wiecej == len(self.tab_black):
                                             print("Nie wybrałeś czarnego pionka")
-                                            nie_ma = 0
+                                            nic_wiecej = 0
             for i in range(len(self.tab_black)):
                 if self.tab_black[i].y == 7:
-                    self.tab_black[i].flaga = 5
-                    plansza[self.tab_black[i].x][self.tab_black[i].y] = 5
+                    self.tab_black[i].flaga_figury = CZARNA_DAMKA
+                    plansza[self.tab_black[i].x][self.tab_black[i].y] = CZARNA_DAMKA
 
 #metoda do usowania pionków z planszy
-    def usun(self,p, u_x, u_y):
-        if p.flaga == 2 or p.flaga == 4 and plansza[u_x][u_y]==3or plansza[u_x][u_y]==5:
+    def usun(self, pionek, usun_x, usun_y):
+        if pionek.flaga_figury == BIALY_PIONEK or pionek.flaga_figury == BIALA_DAMKA and plansza[usun_x][usun_y] == CZARNY_PIONEK or plansza[usun_x][usun_y] == CZARNA_DAMKA:
             for i in range(len(self.tab_black)):
-                if self.tab_black[i].x == u_x and self.tab_black[i].y == u_y :
+                if self.tab_black[i].x == usun_x and self.tab_black[i].y == usun_y :
                     self.tab_black.remove(self.tab_black[i])
-                    plansza[u_x][u_y] = 1
-                    plansza[p.x][p.y] = 1
+                    plansza[usun_x][usun_y] = POLE_CZARNE
+                    plansza[pionek.x][pionek.y] = POLE_CZARNE
                     break
-        if p.flaga == 3 or p.flaga == 5 and plansza[u_x][u_y]==2 or plansza[u_x][u_y]==4:
+        if pionek.flaga_figury == CZARNY_PIONEK or pionek.flaga_figury == CZARNA_DAMKA and plansza[usun_x][usun_y] == BIALY_PIONEK or plansza[usun_x][usun_y] == BIALA_DAMKA:
             for i in range(len(self.tab_white)):
-                if self.tab_white[i].x == u_x and self.tab_white[i].y == u_y :
+                if self.tab_white[i].x == usun_x and self.tab_white[i].y == usun_y :
                     self.tab_white.remove(self.tab_white[i])
-                    plansza[u_x][u_y] = 1
-                    plansza[p.x][p.y] = 1
+                    plansza[usun_x][usun_y] = POLE_CZARNE
+                    plansza[pionek.x][pionek.y] = POLE_CZARNE
                     break
 
 #metoda do graficznej reprezentacji aktualnego przebiegu rozgrywki
@@ -256,28 +265,28 @@ def rysuj_plansze(tab_white,tab_black):
         for y in range(1, 9):
             if x % 2 != 0:
                 if y % 2 != 0:
-                    pygame.draw.rect(Game_window, white_color, [size * (x - 1), size * (y - 1), size, size])
+                    pygame.draw.rect(Game_window, WHITE_COLOR, [SIZE * (x - 1), SIZE * (y - 1), SIZE, SIZE])
                 else:
-                    pygame.draw.rect(Game_window, black_color, [size * (x - 1), size * (y - 1), size, size])
+                    pygame.draw.rect(Game_window, BLACK_COLOR, [SIZE * (x - 1), SIZE * (y - 1), SIZE, SIZE])
             else:
                 if y % 2 != 0:
-                    pygame.draw.rect(Game_window, black_color, [size * (x - 1), size * (y - 1), size, size])
+                    pygame.draw.rect(Game_window, BLACK_COLOR, [SIZE * (x - 1), SIZE * (y - 1), SIZE, SIZE])
                 else:
-                    pygame.draw.rect(Game_window, white_color, [size * (x - 1), size * (y - 1), size, size])
+                    pygame.draw.rect(Game_window, WHITE_COLOR, [SIZE * (x - 1), SIZE * (y - 1), SIZE, SIZE])
 
     for i in range(len(tab_black)):
-        if tab_black[i].flaga == 3:
-            Game_window.blit(b_pawn, (tab_black[i].x * size, tab_black[i].y * size))
+        if tab_black[i].flaga_figury == CZARNY_PIONEK:
+            Game_window.blit(BLACK_PAWN, (tab_black[i].x * SIZE, tab_black[i].y * SIZE))
             pygame.display.flip()
-        elif tab_black[i].flaga == 5:
-            Game_window.blit(b_queen, (tab_black[i].x * size, tab_black[i].y * size))
+        elif tab_black[i].flaga_figury == CZARNA_DAMKA:
+            Game_window.blit(BLACK_QUEEN, (tab_black[i].x * SIZE, tab_black[i].y * SIZE))
             pygame.display.flip()
     for i in range(len(tab_white)):
-        if tab_white[i].flaga == 2:
-            Game_window.blit(w_pawn, (tab_white[i].x * size, tab_white[i].y * size))
+        if tab_white[i].flaga_figury == BIALY_PIONEK:
+            Game_window.blit(WHITE_PAWN, (tab_white[i].x * SIZE, tab_white[i].y * SIZE))
             pygame.display.flip()
-        elif tab_white[i].flaga == 4:
-            Game_window.blit(w_queen, (tab_white[i].x * size, tab_white[i].y * size))
+        elif tab_white[i].flaga_figury == BIALA_DAMKA:
+            Game_window.blit(WHITE_QUEEN, (tab_white[i].x * SIZE, tab_white[i].y * SIZE))
             pygame.display.flip()
     pygame.display.update()
 
@@ -290,41 +299,41 @@ def czy_bicie(turn, tab_white, tab_black):
     ilosc_bic = 0
     if turn % 2 == 0 :
         for l in range(len(tab_white)):
-            if tab_white[l].flaga == 2:
+            if tab_white[l].flaga_figury == BIALY_PIONEK:
                 if tab_white[l].x != 1 and tab_white[l].y != 0 and tab_white[l].x != 0 and tab_white[l].y != 1:
-                    if (plansza[tab_white[l].x - 2][tab_white[l].y - 2] == 1) and (plansza[tab_white[l].x - 1][tab_white[l].y - 1] == 3 or plansza[tab_white[l].x - 1][tab_white[l].y - 1] == 5):
+                    if (plansza[tab_white[l].x - 2][tab_white[l].y - 2] == POLE_CZARNE) and (plansza[tab_white[l].x - 1][tab_white[l].y - 1] == CZARNY_PIONEK or plansza[tab_white[l].x - 1][tab_white[l].y - 1] == CZARNA_DAMKA):
                         print("TAK:[lewo-gora]",tab_white[l].x,tab_white[l].y )
-                        tab_white[l].f_bicia = 1
+                        tab_white[l].flaga_bicia = 1
                         ilosc_bic += 1
 
                 if tab_white[l].x != 6 and tab_white[l].x != 7 and tab_white[l].y != 0 and tab_white[l].y != 1:
-                    if (plansza[tab_white[l].x + 2][tab_white[l].y - 2] == 1) and (plansza[tab_white[l].x + 1][tab_white[l].y - 1] == 3 or plansza[tab_white[l].x + 1][tab_white[l].y - 1] == 5):
+                    if (plansza[tab_white[l].x + 2][tab_white[l].y - 2] == POLE_CZARNE) and (plansza[tab_white[l].x + 1][tab_white[l].y - 1] == CZARNY_PIONEK or plansza[tab_white[l].x + 1][tab_white[l].y - 1] == CZARNA_DAMKA):
                         print("TAK:[prawo-gora]",tab_white[l].x,tab_white[l].y)
-                        tab_white[l].f_bicia = 1
+                        tab_white[l].flaga_bicia = 1
                         ilosc_bic += 1
 
                 if tab_white[l].x != 6 and tab_white[l].x != 7 and tab_white[l].y != 6 and tab_white[l].y != 7:
-                    if (plansza[tab_white[l].x + 2][tab_white[l].y + 2] == 1) and (plansza[tab_white[l].x + 1][tab_white[l].y + 1] == 3 or plansza[tab_white[l].x + 1][tab_white[l].y + 1] == 5):
+                    if (plansza[tab_white[l].x + 2][tab_white[l].y + 2] == POLE_CZARNE) and (plansza[tab_white[l].x + 1][tab_white[l].y + 1] == CZARNY_PIONEK or plansza[tab_white[l].x + 1][tab_white[l].y + 1] == CZARNA_DAMKA):
                         print("TAK:[prawo-dol]",tab_white[l].x,tab_white[l].y)
-                        tab_white[l].f_bicia = 1
+                        tab_white[l].flaga_bicia = 1
                         ilosc_bic += 1
 
                 if tab_white[l].x != 0 and tab_white[l].x != 1 and tab_white[l].y != 6 and tab_white[l].y != 7:
-                    if (plansza[tab_white[l].x - 2][tab_white[l].y + 2] == 1) and (plansza[tab_white[l].x - 1][tab_white[l].y + 1] == 3 or plansza[tab_white[l].x - 1][tab_white[l].y + 1] == 5):
+                    if (plansza[tab_white[l].x - 2][tab_white[l].y + 2] == POLE_CZARNE) and (plansza[tab_white[l].x - 1][tab_white[l].y + 1] == CZARNY_PIONEK or plansza[tab_white[l].x - 1][tab_white[l].y + 1] == CZARNA_DAMKA):
                         print("TAK:[lewo-dol]",tab_white[l].x,tab_white[l].y)
-                        tab_white[l].f_bicia = 1
+                        tab_white[l].flaga_bicia = 1
                         ilosc_bic += 1
 
-            if tab_white[l].flaga == 4:
+            if tab_white[l].flaga_figury == BIALA_DAMKA:
                 if tab_white[l].x != 1 and tab_white[l].y != 0 and tab_white[l].x != 0 and tab_white[l].y != 1:
                     for i in range(1, 5):
                         if (tab_white[l].x - i == 1 or tab_white[l].y - i == 1 or tab_white[l].x - i == 0 or tab_white[l].y - i == 0):
                             break
                         elif (tab_white[l].x - i != 1 and tab_white[l].y - i != 1 and tab_white[l].x - i != 0 and tab_white[l].y - i != 0):
-                            if plansza[tab_white[l].x - i][tab_white[l].y - i] != 1 and plansza[tab_white[l].x - i - 1][tab_white[l].y - i - 1] == 1:
-                                if (plansza[tab_white[l].x - i][tab_white[l].y - i] == 3 or plansza[tab_white[l].x - i][tab_white[l].y - i] == 5) and (plansza[tab_white[l].x - i + 1][tab_white[l].y - i + 1] == 1 or plansza[tab_white[l].x - i + 1][tab_white[l].y - i + 1] == 4):
+                            if plansza[tab_white[l].x - i][tab_white[l].y - i] != POLE_CZARNE and plansza[tab_white[l].x - i - 1][tab_white[l].y - i - 1] == POLE_CZARNE:
+                                if (plansza[tab_white[l].x - i][tab_white[l].y - i] == CZARNY_PIONEK or plansza[tab_white[l].x - i][tab_white[l].y - i] == CZARNA_DAMKA) and (plansza[tab_white[l].x - i + 1][tab_white[l].y - i + 1] == POLE_CZARNE or plansza[tab_white[l].x - i + 1][tab_white[l].y - i + 1] == BIALA_DAMKA):
                                     print("TAK:[lewo-gora]", tab_white[l].x, tab_white[l].y)
-                                    tab_white[l].f_bicia = 1
+                                    tab_white[l].flaga_bicia = 1
                                     ilosc_bic += 1
 
                 if tab_white[l].x != 6 and tab_white[l].x != 7 and tab_white[l].y != 0 and tab_white[l].y != 1:
@@ -332,10 +341,10 @@ def czy_bicie(turn, tab_white, tab_black):
                         if (tab_white[l].x + i == 6 or tab_white[l].y - i == 1 or tab_white[l].x + i == 7 or tab_white[l].y - i == 0):
                             break
                         elif (tab_white[l].x + i != 6 and tab_white[l].y - i != 1 and tab_white[l].x + i != 7 and tab_white[l].y - i != 0):
-                            if plansza[tab_white[l].x + i][tab_white[l].y - i] != 1 and plansza[tab_white[l].x + i + 1][tab_white[l].y - i - 1] == 1:
-                                if (plansza[tab_white[l].x + i][tab_white[l].y - i] == 3 or plansza[tab_white[l].x + i][tab_white[l].y - i] == 5) and (plansza[tab_white[l].x + i - 1][tab_white[l].y - i + 1] == 1 or plansza[tab_white[l].x + i - 1][tab_white[l].y - i + 1] == 4):
+                            if plansza[tab_white[l].x + i][tab_white[l].y - i] != POLE_CZARNE and plansza[tab_white[l].x + i + 1][tab_white[l].y - i - 1] == POLE_CZARNE:
+                                if (plansza[tab_white[l].x + i][tab_white[l].y - i] == CZARNY_PIONEK or plansza[tab_white[l].x + i][tab_white[l].y - i] == CZARNA_DAMKA) and (plansza[tab_white[l].x + i - 1][tab_white[l].y - i + 1] == POLE_CZARNE or plansza[tab_white[l].x + i - 1][tab_white[l].y - i + 1] == BIALA_DAMKA):
                                     print("TAK:[prawo-gora]", tab_white[l].x, tab_white[l].y)
-                                    tab_white[l].f_bicia = 1
+                                    tab_white[l].flaga_bicia = 1
                                     ilosc_bic += 1
 
                 if tab_white[l].x != 6 and tab_white[l].x != 7 and tab_white[l].y != 6 and tab_white[l].y != 7:
@@ -343,10 +352,10 @@ def czy_bicie(turn, tab_white, tab_black):
                         if (tab_white[l].x + i == 6 or tab_white[l].y + i == 6 or tab_white[l].x + i == 7 or tab_white[l].y + i == 7):
                             break
                         elif (tab_white[l].x + i != 6 and tab_white[l].y + i != 6 and tab_white[l].x + i != 7 and tab_white[l].y + i != 7):
-                            if plansza[tab_white[l].x + i][tab_white[l].y + i] != 1 and plansza[tab_white[l].x + i + 1][tab_white[l].y + i + 1] == 1:
-                                if (plansza[tab_white[l].x + i][tab_white[l].y + i] == 3 or plansza[tab_white[l].x + i][tab_white[l].y + i] == 5) and (plansza[tab_white[l].x + i - 1][tab_white[l].y + i - 1] == 1 or plansza[tab_white[l].x + i - 1][tab_white[l].y + i - 1] == 4):
+                            if plansza[tab_white[l].x + i][tab_white[l].y + i] != POLE_CZARNE and plansza[tab_white[l].x + i + 1][tab_white[l].y + i + 1] == POLE_CZARNE:
+                                if (plansza[tab_white[l].x + i][tab_white[l].y + i] == CZARNY_PIONEK or plansza[tab_white[l].x + i][tab_white[l].y + i] == CZARNA_DAMKA) and (plansza[tab_white[l].x + i - 1][tab_white[l].y + i - 1] == POLE_CZARNE or plansza[tab_white[l].x + i - 1][tab_white[l].y + i - 1] == BIALA_DAMKA):
                                     print("TAK:[prawo-dol]", tab_white[l].x, tab_white[l].y)
-                                    tab_white[l].f_bicia = 1
+                                    tab_white[l].flaga_bicia = 1
                                     ilosc_bic += 1
 
                 if tab_white[l].x != 0 and tab_white[l].x != 1 and tab_white[l].y != 6 and tab_white[l].y != 7:
@@ -354,49 +363,49 @@ def czy_bicie(turn, tab_white, tab_black):
                         if (tab_white[l].x - i == 1 or tab_white[l].y + i == 6 or tab_white[l].x - i == 0 or tab_white[l].y + i == 7):
                             break
                         elif (tab_white[l].x - i != 1 and tab_white[l].y + i != 6 and tab_white[l].x - i != 0 and tab_white[l].y + i != 7):
-                            if plansza[tab_white[l].x - i][tab_white[l].y + i] != 1 and plansza[tab_white[l].x - i - 1][tab_white[l].y + i + 1] == 1:
-                                if (plansza[tab_white[l].x - i][tab_white[l].y + i] == 3 or plansza[tab_white[l].x - i][tab_white[l].y + i] == 5) and (plansza[tab_white[l].x - i + 1][tab_white[l].y + i - 1] == 1 or plansza[tab_white[l].x - i + 1][tab_white[l].y + i - 1] == 4):
+                            if plansza[tab_white[l].x - i][tab_white[l].y + i] != POLE_CZARNE and plansza[tab_white[l].x - i - 1][tab_white[l].y + i + 1] == POLE_CZARNE:
+                                if (plansza[tab_white[l].x - i][tab_white[l].y + i] == CZARNY_PIONEK or plansza[tab_white[l].x - i][tab_white[l].y + i] == CZARNA_DAMKA) and (plansza[tab_white[l].x - i + 1][tab_white[l].y + i - 1] == POLE_CZARNE or plansza[tab_white[l].x - i + 1][tab_white[l].y + i - 1] == BIALA_DAMKA):
                                     print("TAK:[lewo-dol]", tab_white[l].x, tab_white[l].y)
-                                    tab_white[l].f_bicia = 1
+                                    tab_white[l].flaga_bicia = 1
                                     ilosc_bic += 1
 
     if turn % 2 != 0:
         for l in range(len(tab_black)):
-            if tab_black[l].flaga == 3:
+            if tab_black[l].flaga_figury == CZARNY_PIONEK:
                 if tab_black[l].x != 0 and tab_black[l].x != 1 and tab_black[l].y != 0 and tab_black[l].y != 1:
-                    if (plansza[tab_black[l].x - 2][tab_black[l].y - 2] == 1) and plansza[tab_black[l].x - 1][tab_black[l].y - 1] == 2 or plansza[tab_black[l].x - 1][tab_black[l].y - 1] == 4:
+                    if (plansza[tab_black[l].x - 2][tab_black[l].y - 2] == POLE_CZARNE) and plansza[tab_black[l].x - 1][tab_black[l].y - 1] == BIALY_PIONEK or plansza[tab_black[l].x - 1][tab_black[l].y - 1] == BIALA_DAMKA:
                         print("TAK:[lewo-gora]",tab_black[l].x,tab_black[l].y)
-                        tab_black[l].f_bicia = 1
+                        tab_black[l].flaga_bicia = 1
                         ilosc_bic += 1
 
                 if tab_black[l].x != 6 and tab_black[l].x != 7 and tab_black[l].y != 0 and tab_black[l].y != 1:
-                    if (plansza[tab_black[l].x + 2][tab_black[l].y - 2] == 1) and plansza[tab_black[l].x + 1][tab_black[l].y - 1] == 2 or plansza[tab_black[l].x + 1][tab_black[l].y - 1] == 4:
+                    if (plansza[tab_black[l].x + 2][tab_black[l].y - 2] == POLE_CZARNE) and plansza[tab_black[l].x + 1][tab_black[l].y - 1] == BIALY_PIONEK or plansza[tab_black[l].x + 1][tab_black[l].y - 1] == BIALA_DAMKA:
                         print("TAK:[prawo-gora]",tab_black[l].x,tab_black[l].y)
-                        tab_black[l].f_bicia = 1
+                        tab_black[l].flaga_bicia = 1
                         ilosc_bic += 1
 
                 if tab_black[l].x != 6 and tab_black[l].x != 7 and tab_black[l].y != 6 and tab_black[l].y != 7:
-                    if (plansza[tab_black[l].x + 2][tab_black[l].y + 2] == 1) and plansza[tab_black[l].x + 1][tab_black[l].y + 1] == 2 or plansza[tab_black[l].x + 1][tab_black[l].y + 1] == 4:
+                    if (plansza[tab_black[l].x + 2][tab_black[l].y + 2] == POLE_CZARNE) and plansza[tab_black[l].x + 1][tab_black[l].y + 1] == BIALY_PIONEK or plansza[tab_black[l].x + 1][tab_black[l].y + 1] == BIALA_DAMKA:
                         print("TAK:[prawo-dol]",tab_black[l].x,tab_black[l].y)
-                        tab_black[l].f_bicia = 1
+                        tab_black[l].flaga_bicia = 1
                         ilosc_bic += 1
 
                 if tab_black[l].x != 0 and tab_black[l].x != 1 and tab_black[l].y != 6 and tab_black[l].y != 7:
-                    if (plansza[tab_black[l].x - 2][tab_black[l].y + 2] == 1) and plansza[tab_black[l].x - 1][tab_black[l].y + 1] == 2 or plansza[tab_black[l].x - 1][tab_black[l].y + 1] == 4:
+                    if (plansza[tab_black[l].x - 2][tab_black[l].y + 2] == POLE_CZARNE) and plansza[tab_black[l].x - 1][tab_black[l].y + 1] == BIALY_PIONEK or plansza[tab_black[l].x - 1][tab_black[l].y + 1] == BIALA_DAMKA:
                         print("TAK:[lewo-dol]",tab_black[l].x,tab_black[l].y)
-                        tab_black[l].f_bicia = 1
+                        tab_black[l].flaga_bicia = 1
                         ilosc_bic += 1
 
-            if tab_black[l].flaga == 5:
+            if tab_black[l].flaga_figury == CZARNA_DAMKA:
                 if tab_black[l].x != 1 and tab_black[l].y != 0 and tab_black[l].x != 0 and tab_black[l].y != 1:
                     for i in range(1, 5):
                         if (tab_black[l].x + i == 0 or tab_black[l].y + i == 0 or tab_black[l].x + i == 1 or tab_black[l].y + i == 1):
                             break
                         if (tab_black[l].x - i != 1 and tab_black[l].y - i != 1 and tab_black[l].x - i != 0 and tab_black[l].y - i != 0):
-                            if plansza[tab_black[l].x - i][tab_black[l].y - i] != 1 and plansza[tab_black[l].x - i - 1][tab_black[l].y - i - 1] == 1:
-                                if (plansza[tab_black[l].x - i][tab_black[l].y - i] == 2 or plansza[tab_black[l].x - i][tab_black[l].y - i] == 4) and (plansza[tab_black[l].x - i + 1][tab_black[l].y - i + 1] == 1 or plansza[tab_black[l].x - i + 1][tab_black[l].y - i + 1] == 5):
+                            if plansza[tab_black[l].x - i][tab_black[l].y - i] != POLE_CZARNE and plansza[tab_black[l].x - i - 1][tab_black[l].y - i - 1] == POLE_CZARNE:
+                                if (plansza[tab_black[l].x - i][tab_black[l].y - i] == BIALY_PIONEK or plansza[tab_black[l].x - i][tab_black[l].y - i] == BIALA_DAMKA) and (plansza[tab_black[l].x - i + 1][tab_black[l].y - i + 1] == POLE_CZARNE or plansza[tab_black[l].x - i + 1][tab_black[l].y - i + 1] == CZARNA_DAMKA):
                                     print("TAK:[lewo-gora]", tab_black[l].x, tab_black[l].y)
-                                    tab_black[l].f_bicia = 1
+                                    tab_black[l].flaga_bicia = 1
                                     ilosc_bic += 1
 
                 if tab_black[l].x != 6 and tab_black[l].x != 7 and tab_black[l].y != 0 and tab_black[l].y != 1:
@@ -404,10 +413,10 @@ def czy_bicie(turn, tab_white, tab_black):
                         if (tab_black[l].x + i == 6 or tab_black[l].y + i == 0 or tab_black[l].x + i == 7 or tab_black[l].y + i == 1):
                             break
                         elif (tab_black[l].x + i != 6 and tab_black[l].y - i != 1 and tab_black[l].x + i != 7 and tab_black[l].y - i != 0):
-                            if plansza[tab_black[l].x + i][tab_black[l].y - i] != 1 and plansza[tab_black[l].x + i + 1][tab_black[l].y - i - 1] == 1:
-                                if (plansza[tab_black[l].x + i][tab_black[l].y - i] == 2 or plansza[tab_black[l].x + i][tab_black[l].y - i] == 4) and (plansza[tab_black[l].x + i - 1][tab_black[l].y - i + 1] == 1 or plansza[tab_black[l].x + i - 1][tab_black[l].y - i + 1] == 5):
+                            if plansza[tab_black[l].x + i][tab_black[l].y - i] != POLE_CZARNE and plansza[tab_black[l].x + i + 1][tab_black[l].y - i - 1] == POLE_CZARNE:
+                                if (plansza[tab_black[l].x + i][tab_black[l].y - i] == BIALY_PIONEK or plansza[tab_black[l].x + i][tab_black[l].y - i] == BIALA_DAMKA) and (plansza[tab_black[l].x + i - 1][tab_black[l].y - i + 1] == POLE_CZARNE or plansza[tab_black[l].x + i - 1][tab_black[l].y - i + 1] == CZARNA_DAMKA):
                                     print("TAK:[prawo-gora]", tab_black[l].x, tab_black[l].y)
-                                    tab_black[l].f_bicia = 1
+                                    tab_black[l].flaga_bicia = 1
                                     ilosc_bic += 1
 
                 if tab_black[l].x != 6 and tab_black[l].x != 7 and tab_black[l].y != 6 and tab_black[l].y != 7:
@@ -415,10 +424,10 @@ def czy_bicie(turn, tab_white, tab_black):
                         if (tab_black[l].x + i == 6 or tab_black[l].y + i == 6 or tab_black[l].x + i == 7 or tab_black[l].y + i == 7):
                             break
                         elif (tab_black[l].x + i != 6 and tab_black[l].y + i != 6 and tab_black[l].x + i != 7 and tab_black[l].y + i != 7) :
-                            if plansza[tab_black[l].x + i][tab_black[l].y + i] != 1 and plansza[tab_black[l].x + i + 1][tab_black[l].y + i + 1] == 1:
-                                if (plansza[tab_black[l].x + i][tab_black[l].y + i] == 2 or plansza[tab_black[l].x + i][tab_black[l].y + i] == 4) and (plansza[tab_black[l].x + i - 1][tab_black[l].y + i - 1] == 1 or plansza[tab_black[l].x + i - 1][tab_black[l].y + i - 1] == 5):
+                            if plansza[tab_black[l].x + i][tab_black[l].y + i] != POLE_CZARNE and plansza[tab_black[l].x + i + 1][tab_black[l].y + i + 1] == POLE_CZARNE:
+                                if (plansza[tab_black[l].x + i][tab_black[l].y + i] == BIALY_PIONEK or plansza[tab_black[l].x + i][tab_black[l].y + i] == BIALA_DAMKA) and (plansza[tab_black[l].x + i - 1][tab_black[l].y + i - 1] == POLE_CZARNE or plansza[tab_black[l].x + i - 1][tab_black[l].y + i - 1] == CZARNA_DAMKA):
                                     print("TAK:[prawo-dol]", tab_black[l].x, tab_black[l].y)
-                                    tab_black[l].f_bicia = 1
+                                    tab_black[l].flaga_bicia = 1
                                     ilosc_bic += 1
 
                 if tab_black[l].x != 0 and tab_black[l].x != 1 and tab_black[l].y != 6 and tab_black[l].y != 7:
@@ -426,20 +435,20 @@ def czy_bicie(turn, tab_white, tab_black):
                         if (tab_black[l].x + i == 0 or tab_black[l].y + i == 6 or tab_black[l].x + i == 1 or tab_black[l].y + i == 7):
                             break
                         elif (tab_black[l].x - i != 1 and tab_black[l].y + i != 6 and tab_black[l].x - i != 0 and tab_black[l].y + i != 7) :
-                            if plansza[tab_black[l].x - i][tab_black[l].y + i] != 1 and plansza[tab_black[l].x - i - 1][tab_black[l].y + i + 1] == 1:
-                                if (plansza[tab_black[l].x - i][tab_black[l].y + i] == 2 or plansza[tab_black[l].x - i][tab_black[l].y + i] == 4) and (plansza[tab_black[l].x - i + 1][tab_black[l].y + i - 1] == 1 or plansza[tab_black[l].x - i + 1][tab_black[l].y + i - 1] == 5):
+                            if plansza[tab_black[l].x - i][tab_black[l].y + i] != POLE_CZARNE and plansza[tab_black[l].x - i - 1][tab_black[l].y + i + 1] == POLE_CZARNE:
+                                if (plansza[tab_black[l].x - i][tab_black[l].y + i] == BIALY_PIONEK or plansza[tab_black[l].x - i][tab_black[l].y + i] == BIALA_DAMKA) and (plansza[tab_black[l].x - i + 1][tab_black[l].y + i - 1] == POLE_CZARNE or plansza[tab_black[l].x - i + 1][tab_black[l].y + i - 1] == CZARNA_DAMKA):
                                     print("TAK:[lewo-dol]", tab_black[l].x, tab_black[l].y)
-                                    tab_black[l].f_bicia = 1
+                                    tab_black[l].flaga_bicia = 1
                                     ilosc_bic += 1
 
     if ilosc_bic != 0:
         return True
     else:
-        print("nie można wykonac bica\nwykonaj zwykly ruch")
+        print("nie mozna wykonac bica\nwykonaj zwykly ruch")
         for i in range(len(tab_white)):
-            tab_white[i].f_bicia = 0
+            tab_white[i].flaga_bicia = 0
         for i in range(len(tab_black)):
-            tab_black[i].f_bicia = 0
+            tab_black[i].flaga_bicia = 0
         return False
 
 #funkcja bicia
@@ -453,71 +462,71 @@ def bicie(pionek):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed()[0]:
                     pos = pygame.mouse.get_pos()
-                    if plansza[pos[0] // size][pos[1] // size] == 1 :
-                        if pionek.flaga < 4:
+                    if plansza[pos[0] // SIZE][pos[1] // SIZE] == 1 :
+                        if pionek.flaga_figury == BIALY_PIONEK or pionek.flaga_figury == CZARNY_PIONEK:
                             # lewo gora pionek
-                            if (pos[0] // size + 2 - pionek.x == 0) and (pos[1] // size + 2 - pionek.y == 0) and plansza[pos[0] // size + 1][pos[1] // size + 1] != pionek.flaga and plansza[pos[0] // size + 1][pos[1] // size + 1] != pionek.flaga + 2:
-                                plansza[pos[0] // size][pos[1] // size] = pionek.flaga
-                                game.usun(pionek, pos[0] // size + 1, pos[1] // size + 1)
-                                pionek.x = pos[0] // size
-                                pionek.y = pos[1] // size
+                            if (pos[0] // SIZE + 2 - pionek.x == 0) and (pos[1] // SIZE + 2 - pionek.y == 0) and plansza[pos[0] // SIZE + 1][pos[1] // SIZE + 1] != pionek.flaga_figury and plansza[pos[0] // SIZE + 1][pos[1] // SIZE + 1] != pionek.flaga_figury + 2:
+                                plansza[pos[0] // SIZE][pos[1] // SIZE] = pionek.flaga_figury
+                                game.usun(pionek, pos[0] // SIZE + 1, pos[1] // SIZE + 1)
+                                pionek.x = pos[0] // SIZE
+                                pionek.y = pos[1] // SIZE
                                 return pionek
                             # prawo gora pionek
-                            if (pos[0] // size - 2 - pionek.x == 0) and (pos[1] // size + 2 - pionek.y == 0) and plansza[pos[0] // size - 1][pos[1] // size + 1] != pionek.flaga and plansza[pos[0] // size - 1][pos[1] // size + 1] != pionek.flaga + 2:
-                                plansza[pos[0] // size][pos[1] // size] = pionek.flaga
-                                game.usun(pionek, pos[0] // size - 1,pos[1] // size + 1)
-                                pionek.x = pos[0] // size
-                                pionek.y = pos[1] // size
+                            if (pos[0] // SIZE - 2 - pionek.x == 0) and (pos[1] // SIZE + 2 - pionek.y == 0) and plansza[pos[0] // SIZE - 1][pos[1] // SIZE + 1] != pionek.flaga_figury and plansza[pos[0] // SIZE - 1][pos[1] // SIZE + 1] != pionek.flaga_figury + 2:
+                                plansza[pos[0] // SIZE][pos[1] // SIZE] = pionek.flaga_figury
+                                game.usun(pionek, pos[0] // SIZE - 1, pos[1] // SIZE + 1)
+                                pionek.x = pos[0] // SIZE
+                                pionek.y = pos[1] // SIZE
                                 return pionek
                             # prawo dol pionek
-                            if (pos[0] // size - 2 - pionek.x == 0) and (pos[1] // size - 2 - pionek.y == 0) and plansza[pos[0] // size - 1][pos[1] // size - 1] != pionek.flaga and plansza[pos[0] // size - 1][pos[1] // size - 1] != pionek.flaga + 2:
-                                plansza[pos[0] // size][pos[1] // size] = pionek.flaga
-                                game.usun(pionek,pos[0] // size - 1,pos[1] // size - 1)
-                                pionek.x = pos[0] // size
-                                pionek.y = pos[1] // size
+                            if (pos[0] // SIZE - 2 - pionek.x == 0) and (pos[1] // SIZE - 2 - pionek.y == 0) and plansza[pos[0] // SIZE - 1][pos[1] // SIZE - 1] != pionek.flaga_figury and plansza[pos[0] // SIZE - 1][pos[1] // SIZE - 1] != pionek.flaga_figury + 2:
+                                plansza[pos[0] // SIZE][pos[1] // SIZE] = pionek.flaga_figury
+                                game.usun(pionek, pos[0] // SIZE - 1, pos[1] // SIZE - 1)
+                                pionek.x = pos[0] // SIZE
+                                pionek.y = pos[1] // SIZE
                                 return pionek
                             # lewo dol pionek
-                            if (pos[0] // size + 2 - pionek.x == 0) and (pos[1] // size - 2 - pionek.y == 0) and plansza[pos[0] // size + 1][pos[1] // size - 1] != pionek.flaga and plansza[pos[0] // size + 1][pos[1] // size - 1] != pionek.flaga + 2:
-                                plansza[pos[0] // size][pos[1] // size] = pionek.flaga
-                                game.usun(pionek, pos[0] // size + 1, pos[1] // size - 1)
-                                pionek.x = pos[0] // size
-                                pionek.y = pos[1] // size
+                            if (pos[0] // SIZE + 2 - pionek.x == 0) and (pos[1] // SIZE - 2 - pionek.y == 0) and plansza[pos[0] // SIZE + 1][pos[1] // SIZE - 1] != pionek.flaga_figury and plansza[pos[0] // SIZE + 1][pos[1] // SIZE - 1] != pionek.flaga_figury + 2:
+                                plansza[pos[0] // SIZE][pos[1] // SIZE] = pionek.flaga_figury
+                                game.usun(pionek, pos[0] // SIZE + 1, pos[1] // SIZE - 1)
+                                pionek.x = pos[0] // SIZE
+                                pionek.y = pos[1] // SIZE
                                 return pionek
                             else:
                                 print("wybierz pole zgodne z zasadami gry")
-                        if pionek.flaga >= 4:
+                        if pionek.flaga_figury == BIALA_DAMKA or pionek.flaga_figury == CZARNA_DAMKA:
                             # lewo gora damka
-                            if pos[0]//size - pionek.x == pos[1]//size - pionek.y and plansza[pos[0] // size + 1][pos[1] // size + 1] != pionek.flaga and plansza[pos[0] // size + 1][pos[1] // size + 1] != pionek.flaga - 2:
-                                plansza[pos[0] // size][pos[1] // size] = pionek.flaga
-                                game.usun(pionek, pos[0] // size + 1, pos[1] // size + 1)
-                                pionek.x = pos[0] // size
-                                pionek.y = pos[1] // size
+                            if pos[0]//SIZE - pionek.x == pos[1]//SIZE - pionek.y and plansza[pos[0] // SIZE + 1][pos[1] // SIZE + 1] != pionek.flaga_figury and plansza[pos[0] // SIZE + 1][pos[1] // SIZE + 1] != pionek.flaga_figury - 2:
+                                plansza[pos[0] // SIZE][pos[1] // SIZE] = pionek.flaga_figury
+                                game.usun(pionek, pos[0] // SIZE + 1, pos[1] // SIZE + 1)
+                                pionek.x = pos[0] // SIZE
+                                pionek.y = pos[1] // SIZE
                                 return pionek
                             # prawo gora damka
-                            if -1*(pos[0]//size - pionek.x) == pos[1]//size - pionek.y and plansza[pos[0] // size - 1][pos[1] // size + 1] != pionek.flaga and plansza[pos[0] // size - 1][pos[1] // size + 1] != pionek.flaga - 2:
-                                plansza[pos[0] // size][pos[1] // size] = pionek.flaga
-                                game.usun(pionek, pos[0] // size - 1, pos[1] // size + 1)
-                                pionek.x = pos[0] // size
-                                pionek.y = pos[1] // size
+                            if -1*(pos[0] // SIZE - pionek.x) == pos[1]//SIZE - pionek.y and plansza[pos[0] // SIZE - 1][pos[1] // SIZE + 1] != pionek.flaga_figury and plansza[pos[0] // SIZE - 1][pos[1] // SIZE + 1] != pionek.flaga_figury - 2:
+                                plansza[pos[0] // SIZE][pos[1] // SIZE] = pionek.flaga_figury
+                                game.usun(pionek, pos[0] // SIZE - 1, pos[1] // SIZE + 1)
+                                pionek.x = pos[0] // SIZE
+                                pionek.y = pos[1] // SIZE
                                 return pionek
                             # prawo dol damka
-                            if pos[0]//size - pionek.x == pos[1]//size - pionek.y and plansza[pos[0] // size - 1][pos[1] // size - 1] != pionek.flaga and plansza[pos[0] // size - 1][pos[1] // size - 1] != pionek.flaga - 2:
-                                plansza[pos[0] // size][pos[1] // size] = pionek.flaga
-                                game.usun(pionek, pos[0] // size - 1, pos[1] // size - 1)
-                                pionek.x = pos[0] // size
-                                pionek.y = pos[1] // size
+                            if pos[0]//SIZE - pionek.x == pos[1]//SIZE - pionek.y and plansza[pos[0] // SIZE - 1][pos[1] // SIZE - 1] != pionek.flaga_figury and plansza[pos[0] // SIZE - 1][pos[1] // SIZE - 1] != pionek.flaga_figury - 2:
+                                plansza[pos[0] // SIZE][pos[1] // SIZE] = pionek.flaga_figury
+                                game.usun(pionek, pos[0] // SIZE - 1, pos[1] // SIZE - 1)
+                                pionek.x = pos[0] // SIZE
+                                pionek.y = pos[1] // SIZE
                                 return pionek
                             # lewo dol damka
-                            if -1*(pos[0]//size - pionek.x) == pos[1]//size - pionek.y and plansza[pos[0] // size + 1][pos[1] // size - 1] != pionek.flaga and plansza[pos[0] // size + 1][pos[1] // size - 1] != pionek.flaga - 2:
-                                plansza[pos[0] // size][pos[1] // size] = pionek.flaga
-                                game.usun(pionek, pos[0] // size + 1, pos[1] // size - 1)
-                                pionek.x = pos[0] // size
-                                pionek.y = pos[1] // size
+                            if -1*(pos[0] // SIZE - pionek.x) == pos[1]//SIZE - pionek.y and plansza[pos[0] // SIZE + 1][pos[1] // SIZE - 1] != pionek.flaga_figury and plansza[pos[0] // SIZE + 1][pos[1] // SIZE - 1] != pionek.flaga_figury - 2:
+                                plansza[pos[0] // SIZE][pos[1] // SIZE] = pionek.flaga_figury
+                                game.usun(pionek, pos[0] // SIZE + 1, pos[1] // SIZE - 1)
+                                pionek.x = pos[0] // SIZE
+                                pionek.y = pos[1] // SIZE
                                 return pionek
                             else:
                                 print("wybierz pole zgodne z zasadami gry")
 
-                    elif plansza[pos[0] // size][pos[1] // size] == 0:
+                    elif plansza[pos[0] // SIZE][pos[1] // SIZE] == POLE_BIALE:
                         print("wybrane pole nie jest polem czarnym")
                     else:
                         print("wybrane pole nie jest puste")
@@ -526,37 +535,37 @@ def bicie(pionek):
 def czy_ruch(pionek):
     print("jestem w funkcji czy_ruch")
     print("czy mozna wykonac ruch ?")
-    i = 0
-    if pionek.flaga == 2 :
-        if pionek.x != 0 and pionek.y != 0 and plansza[pionek.x - 1][pionek.y - 1] == 1:
+    ilosc_ruchow = 0
+    if pionek.flaga_figury == BIALY_PIONEK :
+        if pionek.x != 0 and pionek.y != 0 and plansza[pionek.x - 1][pionek.y - 1] == POLE_CZARNE:
             print("[lewo-gora]",pionek.x,pionek.y)
-            i +=1
-        if pionek.x != 7 and pionek.y != 0 and plansza[pionek.x + 1][pionek.y - 1] == 1:
+            ilosc_ruchow +=1
+        if pionek.x != 7 and pionek.y != 0 and plansza[pionek.x + 1][pionek.y - 1] == POLE_CZARNE:
             print("[prawo-gora]",pionek.x,pionek.y)
-            i +=1
+            ilosc_ruchow +=1
 
-    if pionek.flaga == 3:
-        if pionek.x != 7 and pionek.y != 7 and plansza[pionek.x + 1][pionek.y + 1] == 1:
+    if pionek.flaga_figury == CZARNY_PIONEK:
+        if pionek.x != 7 and pionek.y != 7 and plansza[pionek.x + 1][pionek.y + 1] == POLE_CZARNE:
             print("[prawo-dol]",pionek.x,pionek.y)
-            i += 1
-        if pionek.x != 0 and pionek.y != 7 and plansza[pionek.x - 1][pionek.y + 1] == 1:
+            ilosc_ruchow += 1
+        if pionek.x != 0 and pionek.y != 7 and plansza[pionek.x - 1][pionek.y + 1] == POLE_CZARNE:
             print("[lewo-dol]",pionek.x,pionek.y)
-            i += 1
+            ilosc_ruchow += 1
 
-    if pionek.flaga == 4 or pionek.flaga == 5:
-        if pionek.x != 0 and pionek.y != 0 and plansza[pionek.x - 1][pionek.y - 1] == 1:
+    if pionek.flaga_figury == BIALA_DAMKA or pionek.flaga_figury == CZARNA_DAMKA:
+        if pionek.x != 0 and pionek.y != 0 and plansza[pionek.x - 1][pionek.y - 1] == POLE_CZARNE:
             print("[lewo-gora]",pionek.x,pionek.y)
-            i +=1
-        if pionek.x != 7 and pionek.y != 0 and plansza[pionek.x + 1][pionek.y - 1] == 1:
+            ilosc_ruchow +=1
+        if pionek.x != 7 and pionek.y != 0 and plansza[pionek.x + 1][pionek.y - 1] == POLE_CZARNE:
             print("[prawo-gora]",pionek.x,pionek.y)
-            i +=1
-        if pionek.x != 7 and pionek.y != 7 and plansza[pionek.x + 1][pionek.y + 1] == 1:
+            ilosc_ruchow +=1
+        if pionek.x != 7 and pionek.y != 7 and plansza[pionek.x + 1][pionek.y + 1] == POLE_CZARNE:
             print("[prawo-dol]", pionek.x, pionek.y)
-            i += 1
-        if pionek.x != 0 and pionek.y != 7 and plansza[pionek.x - 1][pionek.y + 1] == 1:
+            ilosc_ruchow += 1
+        if pionek.x != 0 and pionek.y != 7 and plansza[pionek.x - 1][pionek.y + 1] == POLE_CZARNE:
             print("[lewo-dol]", pionek.x, pionek.y)
-            i += 1
-    if i != 0:
+            ilosc_ruchow += 1
+    if ilosc_ruchow != 0:
         return True
     else:
         print("nie można wykonac ruchu")
@@ -574,33 +583,32 @@ def ruch(pionek):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed()[0]:
                     pos = pygame.mouse.get_pos()
-                    if (plansza[pos[0]//size][pos[1]//size] == 1):
-                        if (pos[0] // size - pionek.x == -1 or pos[0] // size - pionek.x == 1) and (pos[1] // size - pionek.y == 1) and pionek.flaga == 3:
-                            plansza[pionek.x][pionek.y] = 1
-                            pionek.x = pos[0] // size
-                            pionek.y = pos[1] // size
-                            plansza[pionek.x][pionek.y] = pionek.flaga
+                    if (plansza[pos[0] // SIZE][pos[1] // SIZE] == POLE_CZARNE):
+                        if (pos[0] // SIZE - pionek.x == -1 or pos[0] // SIZE - pionek.x == 1) and (pos[1] // SIZE - pionek.y == 1) and pionek.flaga_figury == CZARNY_PIONEK:
+                            plansza[pionek.x][pionek.y] = POLE_CZARNE
+                            pionek.x = pos[0] // SIZE
+                            pionek.y = pos[1] // SIZE
+                            plansza[pionek.x][pionek.y] = pionek.flaga_figury
                             return pionek
-                        if (pos[0] // size - pionek.x == -1 or pos[0] // size - pionek.x == 1) and (pos[1] // size - pionek.y == -1) and pionek.flaga == 2:
-                            plansza[pionek.x][pionek.y] = 1
-                            pionek.x = pos[0] // size
-                            pionek.y = pos[1] // size
-                            plansza[pionek.x][pionek.y] = pionek.flaga
+                        if (pos[0] // SIZE - pionek.x == -1 or pos[0] // SIZE - pionek.x == 1) and (pos[1] // SIZE - pionek.y == -1) and pionek.flaga_figury == BIALY_PIONEK:
+                            plansza[pionek.x][pionek.y] = POLE_CZARNE
+                            pionek.x = pos[0] // SIZE
+                            pionek.y = pos[1] // SIZE
+                            plansza[pionek.x][pionek.y] = pionek.flaga_figury
                             return pionek
-                        if (pionek.flaga == 4 or pionek.flaga == 5) and (pos[0] // size - pionek.x == pos[1] // size - pionek.y or pos[0] // size - pionek.x == -1 * (pos[1] // size - pionek.y)):
-                            print("tak")
-                            plansza[pionek.x][pionek.y] = 1
-                            pionek.x = pos[0] // size
-                            pionek.y = pos[1] // size
-                            plansza[pionek.x][pionek.y] = pionek.flaga
+                        if (pionek.flaga_figury == BIALA_DAMKA or pionek.flaga_figury == CZARNA_DAMKA) and (pos[0] // SIZE - pionek.x == pos[1] // SIZE - pionek.y or pos[0] // SIZE - pionek.x == -1 * (pos[1] // SIZE - pionek.y)):
+                            plansza[pionek.x][pionek.y] = POLE_CZARNE
+                            pionek.x = pos[0] // SIZE
+                            pionek.y = pos[1] // SIZE
+                            plansza[pionek.x][pionek.y] = pionek.flaga_figury
                             return pionek
                         else:
                             print("nie można poruszyc sie w wyznaczona pozycje")
 
-                    if plansza[pos[0]//size][pos[1]//size] == 0:
+                    if plansza[pos[0] // SIZE][pos[1] // SIZE] == POLE_BIALE:
                         print("wybrane pole nie jest czarne")
 
-def repr_graf():
+def reprezentacja_terminal():
     z1 = '[#]'   #chr(9635)
     z2 = '   '   #chr(9634)
     print("     ", end='')
@@ -617,19 +625,19 @@ def repr_graf():
         for y in range(0,8):
             if y == 0:
                 print(x,z1,end = '')
-            if plansza[y][x] == 0:
+            if plansza[y][x] == POLE_BIALE:
                 print(z2,end = '')
-            if plansza[y][x] == 1:
+            if plansza[y][x] == POLE_CZARNE:
                 print("   ",end = '')
-            if plansza[y][x] == 2:
+            if plansza[y][x] == BIALY_PIONEK:
                 print(" B ",end = '')
                 #bialy.ilosc_pionkow += 1
-            if plansza[y][x] == 3:
+            if plansza[y][x] == CZARNY_PIONEK:
                 print(" C ",end = '')
                 #czarny.ilosc_pionkow += 1
-            if plansza[y][x] == 4:
+            if plansza[y][x] == BIALA_DAMKA:
                 print("^B^",end = '')
-            if plansza[y][x] == 5:
+            if plansza[y][x] == CZARNA_DAMKA:
                 print("^C^",end = '')
         print(z1,x,end = '')
 
@@ -645,8 +653,13 @@ def repr_graf():
     print("\n")
 
 game = Warcaby()
-game.start()
-while True:
-    print("============================")
-    repr_graf()
-    game.choice_function()
+
+def main():
+    game.start()
+    pygame.font.init()
+    while True:
+        print("============================")
+        reprezentacja_terminal()
+        game.choice_function()
+
+main()
