@@ -304,10 +304,10 @@ def czy_bicie(tablica):
     print("czy mozna wykonac bicie ?")
     ilosc_bic = 0
     for element in tablica:
-        if BIALY_PIONEK <= element.flaga_figury <=CZARNY_PIONEK:
-            for dx, dy in MOVES:
-                x1, y1 = element.wspolrzedna_x + dx, element.wspolrzedna_y + dy
-                x2, y2 = element.wspolrzedna_x + 2 * dx, element.wspolrzedna_y + 2 * dy
+        if BIALY_PIONEK <= element.flaga_figury <= CZARNY_PIONEK:
+            for delta_x, delta_y in MOVES:
+                x1, y1 = element.wspolrzedna_x + delta_x, element.wspolrzedna_y + delta_y
+                x2, y2 = element.wspolrzedna_x + 2 * delta_x, element.wspolrzedna_y + 2 * delta_y
                 if not x1 == 7 and not y1 == 7 and not x1 == 0 and not y1 == 0:
                     if not 0 <= element.wspolrzedna_x <= 1 and not 0 <= element.wspolrzedna_y <= 1 and element.wspolrzedna_x - x1 == 1 and element.wspolrzedna_y - y1 == 1:
                         if plansza[x2][y2] == POLE_CZARNE and plansza[x1][y1] != element.flaga_figury and plansza[x1][y1] != element.flaga_figury + 2 and plansza[x1][y1] != POLE_CZARNE:
@@ -331,8 +331,8 @@ def czy_bicie(tablica):
                             ilosc_bic += 1
         if BIALA_DAMKA <= element.flaga_figury <= CZARNA_DAMKA:
             for i in range(1, 5):
-                for dx, dy in MOVES:
-                    x3, y3 = element.wspolrzedna_x + i * dx, element.wspolrzedna_y + i * dy
+                for delta_x, delta_y in MOVES:
+                    x3, y3 = element.wspolrzedna_x + i * delta_x, element.wspolrzedna_y + i * delta_y
                     if not 0 <= element.wspolrzedna_x <= 1 and not 0 <= element.wspolrzedna_y <= 1:
                         if 0 <= x3 <= 1 or 0 <= y3 <= 1:
                             break
@@ -377,7 +377,7 @@ def czy_bicie(tablica):
             pionek.flaga_bicia = 0
         return False
 
-def podstawianie_dla_bicia(pionek,x1, x2, y1, y2):
+def podstawianie_dla_bicia(pionek, x1, x2, y1, y2):
     plansza[x2][y2] = pionek.flaga_figury
     gra.usun(pionek, x1, y1)
     pionek.wspolrzedna_x = x2
@@ -395,8 +395,8 @@ def bicie(pionek):
                     pos = pygame.mouse.get_pos()
                     x2, y2 = pos[0] // SIZE, pos[1] // SIZE
                     if plansza[x2][y2] == POLE_CZARNE:
-                        for dx, dy in MOVES:
-                            x1, y1 = pionek.wspolrzedna_x + dx, pionek.wspolrzedna_y + dy
+                        for delta_x, delta_y in MOVES:
+                            x1, y1 = pionek.wspolrzedna_x + delta_x, pionek.wspolrzedna_y + delta_y
                             if BIALY_PIONEK <= pionek.flaga_figury <= CZARNY_PIONEK:
                                 # lewo gora pionek
                                 if not pionek.wspolrzedna_x == 0 and not pionek.wspolrzedna_y == 0 and pionek.wspolrzedna_x - x1 == 1 and pionek.wspolrzedna_y - y1 == 1:
@@ -421,7 +421,7 @@ def bicie(pionek):
                             if BIALA_DAMKA <= pionek.flaga_figury <= CZARNA_DAMKA:
                                 # lewo gora damka
                                 if x2 - pionek.wspolrzedna_x == y2 - pionek.wspolrzedna_y and plansza[x2 + 1][y2 + 1] != pionek.flaga_figury and plansza[x2 + 1][y2 + 1] != pionek.flaga_figury - 2:
-                                    pionek = podstawianie_dla_bicia(pionek,x2 + 1, x2, y2 + 1, y2)
+                                    pionek = podstawianie_dla_bicia(pionek, x2 + 1, x2, y2 + 1, y2)
                                     return pionek
                                 # prawo gora damka
                                 if -1 * (x2 - pionek.wspolrzedna_x) == y2 - pionek.wspolrzedna_y and plansza[x2 - 1][x2 + 1] != pionek.flaga_figury and plansza[x2 - 1][x2 + 1] != pionek.flaga_figury - 2:
@@ -447,8 +447,8 @@ def czy_ruch(pionek):
     print("jestem w funkcji czy_ruch")
     print("czy mozna wykonac ruch ?")
     ilosc_ruchow = 0
-    for dx, dy in MOVES:
-        x1, y1 = pionek.wspolrzedna_x + dx, pionek.wspolrzedna_y + dy
+    for delta_x, delta_y in MOVES:
+        x1, y1 = pionek.wspolrzedna_x + delta_x, pionek.wspolrzedna_y + delta_y
         if pionek.flaga_figury == BIALY_PIONEK or CZARNA_DAMKA >= pionek.flaga_figury >= BIALA_DAMKA:
             if not pionek.wspolrzedna_x == 0 and not pionek.wspolrzedna_y == 0 and pionek.wspolrzedna_x - x1 == 1 and pionek.wspolrzedna_y - y1 == 1 and plansza[x1][y1] == POLE_CZARNE:
                 print("[lewo-gora]", pionek.wspolrzedna_x, pionek.wspolrzedna_y)
@@ -488,8 +488,8 @@ def ruch(pionek):
                     pos = pygame.mouse.get_pos()
                     x2, y2 = pos[0] // SIZE, pos[1] // SIZE
                     if plansza[x2][y2] == POLE_CZARNE:
-                        for dx, dy in MOVES:
-                            x1, y1 = pionek.wspolrzedna_x + dx, pionek.wspolrzedna_y + dy
+                        for delta_x, delta_y in MOVES:
+                            x1, y1 = pionek.wspolrzedna_x + delta_x, pionek.wspolrzedna_y + delta_y
                             if (x2 == x1 and y2 == y1) and y2 - pionek.wspolrzedna_y == 1 and pionek.flaga_figury == CZARNY_PIONEK:
                                 pionek = podstawianie_dla_ruchu(pionek, x2, y2)
                                 return pionek
