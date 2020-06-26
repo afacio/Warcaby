@@ -23,7 +23,6 @@ MOVES = [
 POZYCJA_PARZYSTA_X = [0, 2, 4, 6]
 POZYCJA_NIE_PARZYSTA_X = [1, 3, 5, 7]
 POZYCJA_Y = [0, 1, 2, 5, 6, 7]
-
 ZNAK_1 = '[#]'
 ZNAK_2 = '   '
 
@@ -114,14 +113,13 @@ class Warcaby:
                 if pionek.wspolrzedna_y == 0:
                     pionek.flaga_wagi = BIALA_DAMKA
                     plansza[pionek.wspolrzedna_x][pionek.wspolrzedna_y] = BIALA_DAMKA
-            self.turn += 1
         if self.turn % 2 != 0:
             przebieg_gry(self.tab_black, self.turn, self.tab_white, self.tab_black)
             for pionek in self.tab_black:
                 if pionek.wspolrzedna_y == 7:
                     pionek.flaga_wagi = CZARNA_DAMKA
                     plansza[pionek.wspolrzedna_x][pionek.wspolrzedna_y] = CZARNA_DAMKA
-            self.turn += 1
+        self.turn += 1
         print("Koniec tury")
 
     #metoda do usowania pionków z planszy
@@ -161,8 +159,6 @@ def przebieg_gry(tablica, tura, tab_white, tab_black):
             ilosc_ruchu += 1
     while turn:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                turn = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed()[0]:
                     pos = pygame.mouse.get_pos()
@@ -205,14 +201,14 @@ def rysuj_plansze(tab_white, tab_black):
         for j in range(BOARD_SIZE):
             if i % 2 != 0:
                 if j % 2 != 0:
-                    pygame.draw.rect(game_window, WHITE_COLOR, [SIZE * (i), SIZE * (j), SIZE, SIZE])
+                    pygame.draw.rect(game_window, WHITE_COLOR, [SIZE * i, SIZE * j, SIZE, SIZE])
                 else:
-                    pygame.draw.rect(game_window, BLACK_COLOR, [SIZE * (i), SIZE * (j), SIZE, SIZE])
+                    pygame.draw.rect(game_window, BLACK_COLOR, [SIZE * i, SIZE * j, SIZE, SIZE])
             else:
                 if j % 2 != 0:
-                    pygame.draw.rect(game_window, BLACK_COLOR, [SIZE * (i), SIZE * (j), SIZE, SIZE])
+                    pygame.draw.rect(game_window, BLACK_COLOR, [SIZE * i, SIZE * j, SIZE, SIZE])
                 else:
-                    pygame.draw.rect(game_window, WHITE_COLOR, [SIZE * (i), SIZE * (j), SIZE, SIZE])
+                    pygame.draw.rect(game_window, WHITE_COLOR, [SIZE * i, SIZE * j, SIZE, SIZE])
     a = assets.Assets
     for pionek in tab_black:
         if pionek.flaga_wagi == CZARNY_PIONEK:
@@ -272,32 +268,32 @@ def czy_bicie(tablica):
                     if element.wspolrzedna_x not in (0, 1) and element.wspolrzedna_y not in (0, 1) and x2 - x1 == -1 and y2 - y1 == -1:
                         if x2 <= 1 or y2 <= 1:
                             break
-                        if plansza[x2][y2] != POLE_CZARNE and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (POLE_CZARNE, element.flaga_wagi):
-                            if plansza[x2][y2] not in (element.flaga_wagi, element.flaga_wagi - 2):
+                        if plansza[x2][y2] not in (element.flaga_wagi, element.flaga_wagi - 2, POLE_CZARNE):
+                            if plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (POLE_CZARNE, element.flaga_wagi):
                                 print("TAK:[lewo-gora]", element.wspolrzedna_x, element.wspolrzedna_y)
                                 element.flaga_bicia = True
                                 ilosc_bic += 1
                     if element.wspolrzedna_x not in (6, 7) and element.wspolrzedna_y not in (0, 1) and x2 - x1 == 1 and y2 - y1 == -1:
                         if x2 >= 6 or y2 <= 1:
                             break
-                        if plansza[x2][y2] != POLE_CZARNE and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (POLE_CZARNE, element.flaga_wagi):
-                            if plansza[x2][y2] not in (element.flaga_wagi, element.flaga_wagi - 2):
+                        if plansza[x2][y2] not in (element.flaga_wagi, element.flaga_wagi - 2, POLE_CZARNE):
+                            if plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (POLE_CZARNE, element.flaga_wagi):
                                 print("TAK:[prawo-gora]", element.wspolrzedna_x, element.wspolrzedna_y)
                                 element.flaga_bicia = True
                                 ilosc_bic += 1
                     if element.wspolrzedna_x not in (6, 7) and element.wspolrzedna_y not in (6, 7) and x2 - x1 == 1 and y2 - y1 == 1:
                         if x2 >= 6 or y2 >= 6:
                             break
-                        if plansza[x2][y2] != POLE_CZARNE and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (POLE_CZARNE, element.flaga_wagi):
-                            if plansza[x2][y2] not in (element.flaga_wagi, element.flaga_wagi - 2):
+                        if plansza[x2][y2] not in (element.flaga_wagi, element.flaga_wagi - 2, POLE_CZARNE):
+                            if plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (POLE_CZARNE, element.flaga_wagi):
                                 print("TAK:[prawo-dol]", element.wspolrzedna_x, element.wspolrzedna_y)
                                 element.flaga_bicia = True
                                 ilosc_bic += 1
                     if element.wspolrzedna_x not in (0, 1) and element.wspolrzedna_y not in (6, 7) and x2 - x1 == -1 and y2 - y1 == 1:
                         if x2 <= 1 or y2 >= 6:
                             break
-                        if plansza[x2][y2] != POLE_CZARNE and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (POLE_CZARNE, element.flaga_wagi):
-                            if plansza[x2][y2] not in (element.flaga_wagi, element.flaga_wagi - 2):
+                        if plansza[x2][y2] not in (element.flaga_wagi, element.flaga_wagi - 2, POLE_CZARNE):
+                            if plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (POLE_CZARNE, element.flaga_wagi):
                                 print("TAK:[lewo-dol]", element.wspolrzedna_x, element.wspolrzedna_y)
                                 element.flaga_bicia = True
                                 ilosc_bic += 1
@@ -325,60 +321,70 @@ def bicie(pionek):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed()[0]:
                     pos = pygame.mouse.get_pos()
-                    x2, y2 = pos[0] // SIZE, pos[1] // SIZE
-                    if plansza[x2][y2] == POLE_CZARNE:
+                    pos_x, pos_y = pos[0] // SIZE, pos[1] // SIZE
+                    if plansza[pos_x][pos_y] == POLE_CZARNE:
                         for delta_x, delta_y in MOVES:
                             x1, y1 = pionek.wspolrzedna_x + delta_x, pionek.wspolrzedna_y + delta_y
                             if pionek.flaga_wagi in (CZARNY_PIONEK, BIALY_PIONEK):
                                 # lewo gora pionek
-                                if pionek.wspolrzedna_x not in (0, 1) and pionek.wspolrzedna_y not in (0, 1) and x2 - x1 == -1 and y2 - y1 == -1:
+                                if pionek.wspolrzedna_x not in (0, 1) and pionek.wspolrzedna_y not in (0, 1) and pos_x - x1 == -1 and pos_y - y1 == -1:
                                     if plansza[x1][y1] not in (pionek.flaga_wagi, pionek.flaga_wagi + 2, POLE_CZARNE):
-                                        pionek = podstawianie_dla_bicia(pionek, x1, y1, x2, y2)
+                                        pionek = podstawianie_dla_bicia(pionek, x1, y1, pos_x, pos_y)
                                         return pionek
                                 # prawo gora pionek
-                                if pionek.wspolrzedna_x not in (6, 7) and pionek.wspolrzedna_y not in (0, 1) and x2 - x1 == 1 and y2 - y1 == -1:
+                                if pionek.wspolrzedna_x not in (6, 7) and pionek.wspolrzedna_y not in (0, 1) and pos_x - x1 == 1 and pos_y - y1 == -1:
                                     if plansza[x1][y1] not in (pionek.flaga_wagi, pionek.flaga_wagi + 2, POLE_CZARNE):
-                                        pionek = podstawianie_dla_bicia(pionek, x1, y1, x2, y2)
+                                        pionek = podstawianie_dla_bicia(pionek, x1, y1, pos_x, pos_y)
                                         return pionek
                                 # prawo dol pionek
-                                if pionek.wspolrzedna_x not in (6, 7) and pionek.wspolrzedna_y not in (6, 7) and x2 - x1 == 1 and y2 - y1 == 1:
+                                if pionek.wspolrzedna_x not in (6, 7) and pionek.wspolrzedna_y not in (6, 7) and pos_x - x1 == 1 and pos_y - y1 == 1:
                                     if plansza[x1][y1] not in (pionek.flaga_wagi, pionek.flaga_wagi + 2, POLE_CZARNE):
-                                        pionek = podstawianie_dla_bicia(pionek, x1, y1, x2, y2)
+                                        pionek = podstawianie_dla_bicia(pionek, x1, y1, pos_x, pos_y)
                                         return pionek
                                 # lewo dol pionek
-                                if pionek.wspolrzedna_x not in (0, 1) and pionek.wspolrzedna_y not in (6, 7) and x2 - x1 == -1 and y2 - y1 == 1:
+                                if pionek.wspolrzedna_x not in (0, 1) and pionek.wspolrzedna_y not in (6, 7) and pos_x - x1 == -1 and pos_y - y1 == 1:
                                     if plansza[x1][y1] not in (pionek.flaga_wagi, pionek.flaga_wagi + 2, POLE_CZARNE):
-                                        pionek = podstawianie_dla_bicia(pionek, x1, y1, x2, y2)
+                                        pionek = podstawianie_dla_bicia(pionek, x1, y1, pos_x, pos_y)
                                         return pionek
+
                             if pionek.flaga_wagi in (CZARNA_DAMKA, BIALA_DAMKA):
                                 for delta_x, delta_y in MOVES:
                                     for i in range(1, 5):
                                         x1, y1 = pionek.wspolrzedna_x + (i - 1) * delta_x, pionek.wspolrzedna_y + (i - 1) * delta_y
                                         x2, y2 = pionek.wspolrzedna_x + i * delta_x, pionek.wspolrzedna_y + i * delta_y
                                         x3, y3 = pionek.wspolrzedna_x + (i + 1) * delta_x, pionek.wspolrzedna_y + (i + 1) * delta_y
-                                # lewo gora damka
-                                if pionek.wspolrzedna_x not in (0, 1) and pionek.wspolrzedna_y not in (0, 1) and x2 - x1 == -1 and y2 - y1 == -1:
-                                    if plansza[x2][y2] not in (pionek.flaga_wagi, pionek.flaga_wagi - 2, POLE_CZARNE) and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (pionek.flaga_wagi, POLE_CZARNE):
-                                        pionek = podstawianie_dla_bicia(pionek, x2 , y2, x3, y3)
-                                        return pionek
-                                # prawo gora damka
-                                if pionek.wspolrzedna_x not in (6, 7) and pionek.wspolrzedna_y not in (0, 1) and x2 - x1 == 1 and y2 - y1 == -1:
-                                    if plansza[x2][y2] not in (pionek.flaga_wagi, pionek.flaga_wagi - 2, POLE_CZARNE) and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (pionek.flaga_wagi, POLE_CZARNE):
-                                        pionek = podstawianie_dla_bicia(pionek, x2, y2, x3, y3)
-                                        return pionek
-                                # prawo dol damka
-                                if pionek.wspolrzedna_x not in (6, 7) and pionek.wspolrzedna_y not in (6, 7) and x2 - x1 == 1 and y2 - y1 == 1:
-                                    if plansza[x2][y2] not in (pionek.flaga_wagi, pionek.flaga_wagi - 2, POLE_CZARNE) and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (pionek.flaga_wagi, POLE_CZARNE):
-                                        pionek = podstawianie_dla_bicia(pionek, x2, y2, x3, y3)
-                                        return pionek
-                                # lewo dol damka
-                                if pionek.wspolrzedna_x not in (0, 1) and pionek.wspolrzedna_y not in (6, 7) and x2 - x1 == -1 and y2 - y1 == 1:
-                                    if plansza[x2][y2] not in (pionek.flaga_wagi, pionek.flaga_wagi - 2, POLE_CZARNE) and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (pionek.flaga_wagi, POLE_CZARNE):
-                                        pionek = podstawianie_dla_bicia(pionek, x2, y2, x3, y3)
-                                        return pionek
+                                        if x3 == pos_x and y3 == pos_y:
+                                            # lewo gora damka
+                                            if pionek.wspolrzedna_x not in (0, 1) and pionek.wspolrzedna_y not in (0, 1) and x2 - x1 == -1 and y2 - y1 == -1:
+                                                if x2 < 1 or y2 < 1:
+                                                    break
+                                                if plansza[x2][y2] not in (pionek.flaga_wagi, pionek.flaga_wagi - 2, POLE_CZARNE) and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (pionek.flaga_wagi, POLE_CZARNE):
+                                                    pionek = podstawianie_dla_bicia(pionek, x2, y2, x3, y3)
+                                                    return pionek
+                                            # prawo gora damka
+                                            if pionek.wspolrzedna_x not in (6, 7) and pionek.wspolrzedna_y not in (0, 1) and x2 - x1 == 1 and y2 - y1 == -1:
+                                                if x2 > 6 or y2 < 1:
+                                                    break
+                                                if plansza[x2][y2] not in (pionek.flaga_wagi, pionek.flaga_wagi - 2, POLE_CZARNE) and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (pionek.flaga_wagi, POLE_CZARNE):
+                                                    pionek = podstawianie_dla_bicia(pionek, x2, y2, x3, y3)
+                                                    return pionek
+                                            # prawo dol damka
+                                            if pionek.wspolrzedna_x not in (6, 7) and pionek.wspolrzedna_y not in (6, 7) and x2 - x1 == 1 and y2 - y1 == 1:
+                                                if x2 > 6 or y2 > 6:
+                                                    break
+                                                if plansza[x2][y2] not in (pionek.flaga_wagi, pionek.flaga_wagi - 2, POLE_CZARNE) and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (pionek.flaga_wagi, POLE_CZARNE):
+                                                    pionek = podstawianie_dla_bicia(pionek, x2, y2, x3, y3)
+                                                    return pionek
+                                            # lewo dol damka
+                                            if pionek.wspolrzedna_x not in (0, 1) and pionek.wspolrzedna_y not in (6, 7) and x2 - x1 == -1 and y2 - y1 == 1:
+                                                if x2 < 1 or y2 > 6:
+                                                    break
+                                                if plansza[x2][y2] not in (pionek.flaga_wagi, pionek.flaga_wagi - 2, POLE_CZARNE) and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (pionek.flaga_wagi, POLE_CZARNE):
+                                                    pionek = podstawianie_dla_bicia(pionek, x2, y2, x3, y3)
+                                                    return pionek
                             else:
                                 print("wybierz pole zgodne z zasadami gry")
-                    if plansza[x2][y2] == POLE_BIALE:
+                    if plansza[pos_x][pos_y] == POLE_BIALE:
                         print("wybrane pole nie jest polem czarnym")
                     else:
                         print("wybrane pole nie jest puste")
