@@ -1,5 +1,5 @@
-import pygame
 import sys
+import pygame
 import assets
 # pylint: disable=C0301
 
@@ -28,8 +28,8 @@ ZNAK_1 = '[#]'
 ZNAK_2 = '   '
 
 plansza = BOARD_SIZE * [0]
-for x in range(BOARD_SIZE):
-    plansza[x] = [0]*BOARD_SIZE
+for i in range(BOARD_SIZE):
+    plansza[i] = [0]*BOARD_SIZE
 
 class Pionek:
     def __init__(self, x, y, waga):
@@ -106,9 +106,7 @@ class Warcaby:
                         plansza[i][j] = BIALY_PIONEK
                     else:
                         plansza[i][j] = POLE_BIALE
-
-
-#metoda przebiegu gry
+    #metoda przebiegu gry
     def choice_function(self):
         if self.turn % 2 == 0:
             przebieg_gry(self.tab_white, self.turn, self.tab_white, self.tab_black)
@@ -140,7 +138,7 @@ class Warcaby:
                     break
         plansza[usun_x][usun_y] = POLE_CZARNE
         plansza[pionek.wspolrzedna_x][pionek.wspolrzedna_y] = POLE_CZARNE
-
+#funkcja odpowiadajaca za przebieg tury
 def przebieg_gry(tablica, tura, tab_white, tab_black):
     ilosc_ruchu = 0
     nic_wiecej = 0
@@ -280,7 +278,7 @@ def czy_bicie(tablica):
                                 element.flaga_bicia = True
                                 ilosc_bic += 1
                     if element.wspolrzedna_x not in (6, 7) and element.wspolrzedna_y not in (0, 1) and x2 - x1 == 1 and y2 - y1 == -1:
-                        if 6 <= x2 or y2 <= 1:
+                        if x2 >= 6 or y2 <= 1:
                             break
                         if plansza[x2][y2] != POLE_CZARNE and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (POLE_CZARNE, element.flaga_wagi):
                             if plansza[x2][y2] not in (element.flaga_wagi, element.flaga_wagi - 2):
@@ -288,7 +286,7 @@ def czy_bicie(tablica):
                                 element.flaga_bicia = True
                                 ilosc_bic += 1
                     if element.wspolrzedna_x not in (6, 7) and element.wspolrzedna_y not in (6, 7) and x2 - x1 == 1 and y2 - y1 == 1:
-                        if 6 <= x2 or 6 <= y2:
+                        if x2 >= 6 or y2 >= 6:
                             break
                         if plansza[x2][y2] != POLE_CZARNE and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (POLE_CZARNE, element.flaga_wagi):
                             if plansza[x2][y2] not in (element.flaga_wagi, element.flaga_wagi - 2):
@@ -296,7 +294,7 @@ def czy_bicie(tablica):
                                 element.flaga_bicia = True
                                 ilosc_bic += 1
                     if element.wspolrzedna_x not in (0, 1) and element.wspolrzedna_y not in (6, 7) and x2 - x1 == -1 and y2 - y1 == 1:
-                        if x2 <= 1 or 6 <= y2:
+                        if x2 <= 1 or y2 >= 6:
                             break
                         if plansza[x2][y2] != POLE_CZARNE and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (POLE_CZARNE, element.flaga_wagi):
                             if plansza[x2][y2] not in (element.flaga_wagi, element.flaga_wagi - 2):
