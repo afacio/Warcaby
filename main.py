@@ -261,39 +261,39 @@ def czy_bicie(tablica):
                             ilosc_bic += 1
         if element.flaga_wagi in (CZARNA_DAMKA, BIALA_DAMKA):
             for delta_x, delta_y in MOVES:
-                for i in range(1, 5):
-                    x1, y1 = element.wspolrzedna_x + (i - 1) * delta_x, element.wspolrzedna_y + (i - 1) * delta_y
-                    x2, y2 = element.wspolrzedna_x + i * delta_x, element.wspolrzedna_y + i * delta_y
-                    x3, y3 = element.wspolrzedna_x + (i + 1) * delta_x, element.wspolrzedna_y + (i + 1) * delta_y
+                for i in range(0, 8):
+                    x1, y1 = element.wspolrzedna_x + i * delta_x, element.wspolrzedna_y + i * delta_y  # puste badz twoja figura
+                    x2, y2 = element.wspolrzedna_x + (i + 1) * delta_x, element.wspolrzedna_y + (i + 1) * delta_y  # figura
+                    x3, y3 = element.wspolrzedna_x + (i + 2) * delta_x, element.wspolrzedna_y + (i + 2) * delta_y  # puste
                     if element.wspolrzedna_x not in (0, 1) and element.wspolrzedna_y not in (0, 1) and x2 - x1 == -1 and y2 - y1 == -1:
-                        if x2 <= 1 or y2 <= 1:
+                        if x2 < 1 or y2 < 1:
                             break
                         if plansza[x2][y2] not in (element.flaga_wagi, element.flaga_wagi - 2, POLE_CZARNE):
-                            if plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (POLE_CZARNE, element.flaga_wagi):
+                            if plansza[x3][y3] == POLE_CZARNE and (plansza[x1][y1] == POLE_CZARNE or (x1 == element.wspolrzedna_x and y1 == element.wspolrzedna_y)):
                                 print("TAK:[lewo-gora]", element.wspolrzedna_x, element.wspolrzedna_y)
                                 element.flaga_bicia = True
                                 ilosc_bic += 1
                     if element.wspolrzedna_x not in (6, 7) and element.wspolrzedna_y not in (0, 1) and x2 - x1 == 1 and y2 - y1 == -1:
-                        if x2 >= 6 or y2 <= 1:
+                        if x2 > 6 or y2 < 1:
                             break
                         if plansza[x2][y2] not in (element.flaga_wagi, element.flaga_wagi - 2, POLE_CZARNE):
-                            if plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (POLE_CZARNE, element.flaga_wagi):
+                            if plansza[x3][y3] == POLE_CZARNE and (plansza[x1][y1] == POLE_CZARNE or (x1 == element.wspolrzedna_x and y1 == element.wspolrzedna_y)):
                                 print("TAK:[prawo-gora]", element.wspolrzedna_x, element.wspolrzedna_y)
                                 element.flaga_bicia = True
                                 ilosc_bic += 1
                     if element.wspolrzedna_x not in (6, 7) and element.wspolrzedna_y not in (6, 7) and x2 - x1 == 1 and y2 - y1 == 1:
-                        if x2 >= 6 or y2 >= 6:
+                        if x2 > 6 or y2 > 6:
                             break
                         if plansza[x2][y2] not in (element.flaga_wagi, element.flaga_wagi - 2, POLE_CZARNE):
-                            if plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (POLE_CZARNE, element.flaga_wagi):
+                            if plansza[x3][y3] == POLE_CZARNE and (plansza[x1][y1] == POLE_CZARNE or (x1 == element.wspolrzedna_x and y1 == element.wspolrzedna_y)):
                                 print("TAK:[prawo-dol]", element.wspolrzedna_x, element.wspolrzedna_y)
                                 element.flaga_bicia = True
                                 ilosc_bic += 1
                     if element.wspolrzedna_x not in (0, 1) and element.wspolrzedna_y not in (6, 7) and x2 - x1 == -1 and y2 - y1 == 1:
-                        if x2 <= 1 or y2 >= 6:
+                        if x2 < 1 or y2 > 6:
                             break
                         if plansza[x2][y2] not in (element.flaga_wagi, element.flaga_wagi - 2, POLE_CZARNE):
-                            if plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (POLE_CZARNE, element.flaga_wagi):
+                            if plansza[x3][y3] == POLE_CZARNE and (plansza[x1][y1] == POLE_CZARNE or (x1 == element.wspolrzedna_x and y1 == element.wspolrzedna_y)):
                                 print("TAK:[lewo-dol]", element.wspolrzedna_x, element.wspolrzedna_y)
                                 element.flaga_bicia = True
                                 ilosc_bic += 1
@@ -358,30 +358,34 @@ def bicie(pionek):
                                             if pionek.wspolrzedna_x not in (0, 1) and pionek.wspolrzedna_y not in (0, 1) and x2 - x1 == -1 and y2 - y1 == -1:
                                                 if x2 < 1 or y2 < 1:
                                                     break
-                                                if plansza[x2][y2] not in (pionek.flaga_wagi, pionek.flaga_wagi - 2, POLE_CZARNE) and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (pionek.flaga_wagi, POLE_CZARNE):
-                                                    pionek = podstawianie_dla_bicia(pionek, x2, y2, x3, y3)
-                                                    return pionek
+                                                if plansza[x2][y2] not in (pionek.flaga_wagi, pionek.flaga_wagi - 2, POLE_CZARNE):
+                                                    if plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (pionek.flaga_wagi, POLE_CZARNE):
+                                                        pionek = podstawianie_dla_bicia(pionek, x2, y2, x3, y3)
+                                                        return pionek
                                             # prawo gora damka
                                             if pionek.wspolrzedna_x not in (6, 7) and pionek.wspolrzedna_y not in (0, 1) and x2 - x1 == 1 and y2 - y1 == -1:
                                                 if x2 > 6 or y2 < 1:
                                                     break
-                                                if plansza[x2][y2] not in (pionek.flaga_wagi, pionek.flaga_wagi - 2, POLE_CZARNE) and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (pionek.flaga_wagi, POLE_CZARNE):
-                                                    pionek = podstawianie_dla_bicia(pionek, x2, y2, x3, y3)
-                                                    return pionek
+                                                if plansza[x2][y2] not in (pionek.flaga_wagi, pionek.flaga_wagi - 2, POLE_CZARNE):
+                                                    if plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (pionek.flaga_wagi, POLE_CZARNE):
+                                                        pionek = podstawianie_dla_bicia(pionek, x2, y2, x3, y3)
+                                                        return pionek
                                             # prawo dol damka
                                             if pionek.wspolrzedna_x not in (6, 7) and pionek.wspolrzedna_y not in (6, 7) and x2 - x1 == 1 and y2 - y1 == 1:
                                                 if x2 > 6 or y2 > 6:
                                                     break
-                                                if plansza[x2][y2] not in (pionek.flaga_wagi, pionek.flaga_wagi - 2, POLE_CZARNE) and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (pionek.flaga_wagi, POLE_CZARNE):
-                                                    pionek = podstawianie_dla_bicia(pionek, x2, y2, x3, y3)
-                                                    return pionek
+                                                if plansza[x2][y2] not in (pionek.flaga_wagi, pionek.flaga_wagi - 2, POLE_CZARNE):
+                                                    if plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (pionek.flaga_wagi, POLE_CZARNE):
+                                                        pionek = podstawianie_dla_bicia(pionek, x2, y2, x3, y3)
+                                                        return pionek
                                             # lewo dol damka
                                             if pionek.wspolrzedna_x not in (0, 1) and pionek.wspolrzedna_y not in (6, 7) and x2 - x1 == -1 and y2 - y1 == 1:
                                                 if x2 < 1 or y2 > 6:
                                                     break
-                                                if plansza[x2][y2] not in (pionek.flaga_wagi, pionek.flaga_wagi - 2, POLE_CZARNE) and plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (pionek.flaga_wagi, POLE_CZARNE):
-                                                    pionek = podstawianie_dla_bicia(pionek, x2, y2, x3, y3)
-                                                    return pionek
+                                                if plansza[x2][y2] not in (pionek.flaga_wagi, pionek.flaga_wagi - 2, POLE_CZARNE):
+                                                    if plansza[x3][y3] == POLE_CZARNE and plansza[x1][y1] in (pionek.flaga_wagi, POLE_CZARNE):
+                                                        pionek = podstawianie_dla_bicia(pionek, x2, y2, x3, y3)
+                                                        return pionek
                             else:
                                 print("wybierz pole zgodne z zasadami gry")
                     if plansza[pos_x][pos_y] == POLE_BIALE:
@@ -471,10 +475,8 @@ def reprezentacja_terminal():
                 print("   ", end='')
             if plansza[j][i] == BIALY_PIONEK:
                 print(" B ", end='')
-                #bialy.ilosc_pionkow += 1
             if plansza[j][i] == CZARNY_PIONEK:
                 print(" C ", end='')
-                #czarny.ilosc_pionkow += 1
             if plansza[j][i] == BIALA_DAMKA:
                 print("^B^", end='')
             if plansza[j][i] == CZARNA_DAMKA:
